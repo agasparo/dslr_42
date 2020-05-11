@@ -4,6 +4,6 @@ import (
 	"types"
 )
 
-func GetHauses(data map[int]types.tab) {
+func GetHauses(data types.Dat) {
 
 }
