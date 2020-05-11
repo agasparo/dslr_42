@@ -9,7 +9,6 @@ import (
 	"Response"
 	"types"
 	"maps"
-	"dataOp"
 )
 
 func ReadFile(Dat *types.Datas, File string, t int) (int) {
@@ -65,9 +64,7 @@ func ReadFile(Dat *types.Datas, File string, t int) (int) {
 func RempHisto(record []string, S map[int]string, M map[int]string, iS int) {
 
 	if iS != -1 {
-		if !dataOp.InArray(S, record[iS]) {
-			S[len(S)] = record[iS]
-		}
+		S[len(S)] = record[iS]
 	}
 }
 

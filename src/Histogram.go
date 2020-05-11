@@ -1,14 +1,13 @@
 package main
 
 import (
-	"github.com/wcharczuk/go-chart"
+	//"github.com/wcharczuk/go-chart"
 	"os"
 	"file"
 	"types"
 	"norm"
 	"Response"
 	"strings"
-	"fmt"
 	"dataOp"
 )
 
@@ -31,11 +30,10 @@ func main() {
 	}
 	norm.NormalizeAllData(&Data)
 	dataOp.GetMat(Data.Categ, Data.Mat)
-	fmt.Println(Data.School)
-	fmt.Println(Data.Mat)
+	dataOp.Calc(Data)
 }
 
-func Darw() {
+/*func Darw() {
 	graph := chart.BarChart{
 		Title: "Histogram",
 		Background: chart.Style{
@@ -57,4 +55,4 @@ func Darw() {
 	defer f.Close()
 	graph.Render(chart.PNG, f)
 	//os.Remove("output.png")
-}
+}*/
