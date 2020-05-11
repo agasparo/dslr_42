@@ -8,8 +8,7 @@ import (
 	"norm"
 	"Response"
 	"strings"
-	"dataOp"
-	"maps"
+	"fmt"
 )
 
 func main() {
@@ -25,17 +24,12 @@ func main() {
 		return
 	}
 	Data := types.Datas{}
-	res := file.ReadFile(&Data, args[0])
+	res := file.ReadFile(&Data, args[0], 1)
 	if res != 0 {
 		return
 	}
 	norm.NormalizeAllData(&Data)
-	index := maps.Array_search(Data.Categ, "Hogwarts House")
-	if index == -1 {
-		Response.Print("No Hause in your data")
-		return
-	}
-	dataOp.GetHauses(Data.Table[index])
+	fmt.Println(Data.School)
 }
 
 func Darw() {

@@ -26,7 +26,7 @@ func main() {
 		return
 	}
 	Data := types.Datas{}
-	res := file.ReadFile(&Data, args[0])
+	res := file.ReadFile(&Data, args[0], 0)
 	if res != 0 {
 		return
 	}

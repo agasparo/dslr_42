@@ -8,9 +8,11 @@ import (
 	"strconv"
 	"Response"
 	"types"
+	"maps"
+	"dataOp"
 )
 
-func ReadFile(Dat *types.Datas, File string) (int) {
+func ReadFile(Dat *types.Datas, File string, t int) (int) {
 
 	csvfile, err := os.Open(File)
 	if err != nil {
@@ -18,9 +20,14 @@ func ReadFile(Dat *types.Datas, File string) (int) {
 		return (1)
 	}
 	r := csv.NewReader(csvfile)
+	index := 0
 
 	Dat.Table = make(map[int]types.Dat)
 	Dat.Categ = make(map[int]string)
+	if t == 1 {
+		Dat.School = make(map[int]string)
+		Dat.Mat = make(map[int]string)
+	}
 	line := 0
 
 	for {
@@ -34,7 +41,17 @@ func ReadFile(Dat *types.Datas, File string) (int) {
 		}
 		if line == 0 {
 			RempData(record, Dat.Table, Dat.Categ, 0)
+			if t == 1 {
+				index = maps.Array_search(Dat.Categ, "Hogwarts House")
+				if index == -1 {
+					Response.Print("No Hause in your data")
+					return (1)
+				}
+			}
 		} else if line >= 1 {
+			if t == 1 {
+				RempHisto(record, Dat.School, Dat.Mat, index)
+			}
 			RempData(record, Dat.Table, Dat.Categ, 1)
 		}
 		line++
@@ -43,6 +60,15 @@ func ReadFile(Dat *types.Datas, File string) (int) {
 		return (1)
 	}
 	return (0)
+}
+
+func RempHisto(record []string, S map[int]string, M map[int]string, iS int) {
+
+	if iS != -1 {
+		if dataOp.InArray(S, record[iS]) {
+			S[len(S)] = record[iS]
+		}
+	}
 }
 
 func RempData(record []string, Data map[int]types.Dat, Categ map[int]string, t int) {
