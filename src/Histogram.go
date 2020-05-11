@@ -9,6 +9,7 @@ import (
 	"Response"
 	"strings"
 	"fmt"
+	"dataOp"
 )
 
 func main() {
@@ -29,7 +30,9 @@ func main() {
 		return
 	}
 	norm.NormalizeAllData(&Data)
+	dataOp.GetMat(Data.Categ, Data.Mat)
 	fmt.Println(Data.School)
+	fmt.Println(Data.Mat)
 }
 
 func Darw() {
