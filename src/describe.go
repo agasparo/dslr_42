@@ -10,6 +10,7 @@ import (
 	"os"
 	"Response"
 	"strings"
+	"maps"
 )
 
 func main() {
@@ -29,11 +30,12 @@ func main() {
 	if res != 0 {
 		return
 	}
-	head := show.Header(Data.Categ)
-	show.FormatLine(head, Describe(Data.Table))
+	tab := Describe(Data.Table, Data.Categ)
+	Data.Categ = maps.Reindex(Data.Categ)
+	show.FormatLine(show.Header(Data.Categ), tab)
 }
 
-func Describe(data map[int]types.Dat) (map[int]string) {
+func Describe(data map[int]types.Dat, Categ map[int]string) (map[int]string) {
 
 	var count, mean, std, min, max, per25, per50, per75 float64
 	Tab := make(map[int]string)
@@ -45,10 +47,11 @@ func Describe(data map[int]types.Dat) (map[int]string) {
 	Tab[5] = "50%\t"
 	Tab[6] = "75%\t"
 	Tab[7] = "Max\t"
+	z := 0
 
 	for i := 0; i < len(data); i++ {
 
-		if !math.IsNaN(data[i].Cat[0]) {
+		if len(data[i].Cat) > 0 && !math.IsNaN(data[i].Cat[0]) {
 
 			count = maths.Count(data[i].Cat)
 			Tab[0] += fmt.Sprintf("%f", count)
@@ -73,10 +76,13 @@ func Describe(data map[int]types.Dat) (map[int]string) {
 
 			max = maths.Max(data[i].Cat)
 			Tab[7] += fmt.Sprintf("%f", max)
-		}
 
-		if i + 1 < len(data) {
-			AddTab(Tab)
+			if i + 1 < len(data) {
+				AddTab(Tab)
+			}
+		} else {
+			Categ = maps.MapSliceCount(Categ, i - z, 1)
+			z++
 		}
 	}
 	return (Tab)

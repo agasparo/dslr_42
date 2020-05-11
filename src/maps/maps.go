@@ -1,7 +1,7 @@
 package maps
 
 import (
-
+	"strings"
 )
 
 func Array_search(array map[int]string, to_search string) (int) {
@@ -15,9 +15,23 @@ func Array_search(array map[int]string, to_search string) (int) {
 	return (-1)
 }
 
+func MapSliceCount(data map[int]string, index int, add int) (map[int]string) {
+
+	if add == 0 {
+		return (data)
+	}
+
+	for i := index; i < len(data); i++ {
+
+		data[i] = data[i + add]
+		delete(data, i + add);
+	}
+	return (data)
+}
+
 func Reindex(data map[int]string) (map[int]string) {
 
-	tab := make(map[int]string)	
+	tab := make(map[int]string)
 
 	for i := getminkey(data); i < len(data); i++ {
 
