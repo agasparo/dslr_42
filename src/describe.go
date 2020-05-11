@@ -4,7 +4,6 @@ import (
 	"file"
 	"fmt"
 	"types"
-	"norm"
 	"show"
 	"maths"
 	"math"
@@ -30,7 +29,6 @@ func main() {
 	if res != 0 {
 		return
 	}
-	norm.NormalizeAllData(&Data)
 	head := show.Header(Data.Categ)
 	show.FormatLine(head, Describe(Data.Table))
 }

@@ -57,7 +57,15 @@ func RempData(record []string, Data map[int]types.Dat, Categ map[int]string, t i
 		}
 	} else {
 		for i := 0; i < len(record); i++ {
-			Data[i].Cat[len(Data[i].Cat)], _ = strconv.ParseFloat(record[i], 64)
+			if IsNumeric(record[i]) {
+				Data[i].Cat[len(Data[i].Cat)], _ = strconv.ParseFloat(record[i], 64)
+			}
 		}
 	}
+}
+
+func IsNumeric(s string) (bool) {
+
+    _, err := strconv.ParseFloat(s, 64)
+    return (err == nil)
 }
