@@ -9,6 +9,7 @@ import (
 	"Response"
 	"strings"
 	"dataOp"
+	"fmt"
 )
 
 func main() {
@@ -30,7 +31,9 @@ func main() {
 	}
 	norm.NormalizeAllData(&Data)
 	dataOp.GetMat(Data.Categ, Data.Mat)
-	dataOp.Calc(Data)
+	GraphV := dataOp.Calc(Data)
+	fmt.Println(GraphV)
+	//dataOp.GetValFor(GraphV, 0)
 }
 
 /*func Darw() {
