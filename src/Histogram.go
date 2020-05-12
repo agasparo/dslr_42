@@ -32,7 +32,7 @@ func main() {
 	//norm.NormalizeAllData(&Data)
 	dataOp.GetMat(Data.Categ, Data.Mat)
 	GraphV := dataOp.Calc(Data)
-	Tab := [4]string{"Ravenclaw", "Slytherin", "Gryffindor", "Hufflepuff"}
+	Tab := [4]string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"}
 	z := 0
 	i := 0
 	//for i := 0; i < len(GraphV.Table); i += 4 {

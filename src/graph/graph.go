@@ -5,9 +5,10 @@ import (
 	//"github.com/wcharczuk/go-chart"
 	//"os"
 	"fmt"
-	//"maths"
-	"dataOp"
+	"maths"
+	//"dataOp"
 	//"maps"
+	"sort"
 )
 
 func DrawOne(Data types.GraphHisto, Sc [4]string, name string, mat string, i int) {
@@ -26,10 +27,18 @@ func DrawOne(Data types.GraphHisto, Sc [4]string, name string, mat string, i int
 
 func DrawHisto(Data types.GraphHisto, Sc [4]string, name string, mat string, i int) {
 	
-	v := make(map[int]float64)
-	var n float64
+	//v := make(map[int]float64)
+	//var n float64
 
-	v[0], n = dataOp.CountSearch(Data.Table[i + 0].Cat, 4, 1, 0.0)
+	//v = Data.Table[i].Cat
+	for i = i; i < 4; i++ {
+		fmt.Printf("matiere : %s, sc : %s\n", mat, Sc[i])
+		res := maths.MaptoSlice(Data.Table[i].Cat)
+		sort.Float64s(res)
+		fmt.Println(res[0])
+	}
+
+	/*v[0], n = dataOp.CountSearch(Data.Table[i + 0].Cat, 4, 1, 0.0)
 	v[1], n = dataOp.CountSearch(Data.Table[i + 0].Cat, 2, 1, n)
 	v[2], n = dataOp.CountSearch(Data.Table[i + 0].Cat, 4, 3, n)
 	v[3], _ = dataOp.CountSearch(Data.Table[i + 0].Cat, 1, 1, n)
@@ -47,9 +56,9 @@ func DrawHisto(Data types.GraphHisto, Sc [4]string, name string, mat string, i i
 	v[12], n = dataOp.CountSearch(Data.Table[i + 3].Cat, 4, 1, 0.0)
 	v[13], n = dataOp.CountSearch(Data.Table[i + 3].Cat, 2, 1, n)
 	v[14], n = dataOp.CountSearch(Data.Table[i + 3].Cat, 4, 3, n)
-	v[15], _ = dataOp.CountSearch(Data.Table[i + 3].Cat, 1, 1, n)
+	v[15], _ = dataOp.CountSearch(Data.Table[i + 3].Cat, 1, 1, n)*/
 
-	fmt.Printf("%s%s%s\n", "Element", "Value", "Histogram")
+	/*fmt.Printf("%s%s%s\n", "Element", "Value", "Histogram")
 
     for z := 0; z < len(v); z++ {
         fmt.Printf("%d %f        ", z, v[z])
@@ -58,5 +67,5 @@ func DrawHisto(Data types.GraphHisto, Sc [4]string, name string, mat string, i i
             fmt.Printf("%c", '∎')
         }
         fmt.Println()
-    }
+    }*/
 }

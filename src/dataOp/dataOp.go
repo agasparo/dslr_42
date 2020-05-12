@@ -16,7 +16,7 @@ func Calc(data types.Datas) (types.GraphHisto) {
 
 	Save := types.GraphHisto{}
 	Save.Table = make(map[int]types.Dat)
-	Sc := [4]string{"Ravenclaw", "Slytherin", "Gryffindor", "Hufflepuff"}
+	Sc := [4]string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"}
 
 	for i := 0; i < len(data.Mat); i++ {
 
