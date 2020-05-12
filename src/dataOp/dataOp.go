@@ -3,6 +3,7 @@ package dataOp
 import (
 	"types"
 	"maths"
+	//"fmt"
 )
 
 func GetMat(cat map[int]string, mat map[int]string) {
@@ -55,4 +56,28 @@ func GetValFor(Data *types.GraphHisto, begin int) {
 		Ec = maths.EcarType(V)
 		Data.Stats[len(Data.Stats)] = Ec
 	}
+}
+
+func CountSearch(data map[int]float64, percent int, add int, ref_min float64) (float64) {
+
+	var per, count float64
+	var total int
+
+	count = maths.Count(data)
+	per = maths.Percentile(float64(add) * count, percent, data)
+	total = CountPerc(ref_min, per, data)
+	return (float64(total))
+}
+
+func CountPerc(min float64, max float64, data map[int]float64) (int) {
+
+	var c int
+
+	for i := 0; i < len(data); i++ {
+
+		if data[i] <= max && data[i] >= min {
+			c++
+		}
+	}
+	return (c)
 }

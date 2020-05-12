@@ -15,6 +15,18 @@ func Array_search(array map[int]string, to_search string) (int) {
 	return (-1)
 }
 
+func CountSearch(array map[int]string, to_search string) (float64) {
+
+	c := 0.0
+	for i := 0; i < len(array); i++ {
+
+		if strings.Index(array[i], to_search) != -1 {
+			c++
+		}
+	}
+	return (c)
+}
+
 func ArraySearchFloat(array map[int]float64, to_search float64) (int) {
 
 	for i := 0; i < len(array); i++ {

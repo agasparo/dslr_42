@@ -38,7 +38,7 @@ func main() {
 	for i := 0; i < len(GraphV.Table); i += 4 {
 		dataOp.GetValFor(&GraphV, i)
 		fmt.Println(GraphV.Stats)
-		graph.DrawOne(GraphV, Tab, "outpout" + strconv.Itoa(z) + ".png", Data.Mat[z])
+		graph.DrawOne(GraphV, Tab, "outpout" + strconv.Itoa(z) + ".png", Data.Mat[z], i)
 		z++
 	}
 }
