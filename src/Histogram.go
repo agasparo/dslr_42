@@ -1,7 +1,6 @@
 package main
 
 import (
-	//"github.com/wcharczuk/go-chart"
 	"os"
 	"file"
 	"types"
@@ -10,6 +9,8 @@ import (
 	"strings"
 	"dataOp"
 	"fmt"
+	"graph"
+	"strconv"
 )
 
 func main() {
@@ -32,30 +33,12 @@ func main() {
 	norm.NormalizeAllData(&Data)
 	dataOp.GetMat(Data.Categ, Data.Mat)
 	GraphV := dataOp.Calc(Data)
-	fmt.Println(GraphV)
-	//dataOp.GetValFor(GraphV, 0)
-}
-
-/*func Darw() {
-	graph := chart.BarChart{
-		Title: "Histogram",
-		Background: chart.Style{
-			Padding: chart.Box{
-				Top: 40,
-			},
-		},
-		Height:   512,
-		BarWidth: 60,
-		Bars: []chart.Value{ // cours 
-			{Value: 5.25, Label: "Blue"},
-			{Value: 4.88, Label: "Green"},
-			{Value: 4.74, Label: "Gray"},
-			{Value: 3.22, Label: "Orange"},
-		},
+	Tab := [4]string{"Ravenclaw", "Slytherin", "Gryffindor", "Hufflepuff"}
+	z := 0
+	for i := 0; i < len(GraphV.Table); i += 4 {
+		dataOp.GetValFor(&GraphV, i)
+		fmt.Println(GraphV.Stats)
+		graph.DrawOne(GraphV, Tab, "outpout" + strconv.Itoa(z) + ".png", Data.Mat[z])
+		z++
 	}
-
-	f, _ := os.Create("output.png")
-	defer f.Close()
-	graph.Render(chart.PNG, f)
-	//os.Remove("output.png")
-}*/
+}

@@ -76,6 +76,25 @@ func Percentile(c float64, divi int, data map[int]float64) (float64) {
 	return (0.0)
 }
 
+func Variance(data map[int]float64) (float64) {
+
+	var n, Sum, SumSq float64
+
+	for i := 0; i < len(data); i++ {
+
+		n = float64(i + 1)
+		Sum += data[i]
+		SumSq += math.Pow(data[i], 2)
+	}
+	V := (SumSq - (Sum * Sum) / n) / (n - 1)
+	return (V)
+}
+
+func EcarType(v float64) (float64) {
+
+	return(math.Sqrt(v))
+}
+
 func MaptoSlice(data map[int]float64) ([]float64) {
 
 	var Tab []float64

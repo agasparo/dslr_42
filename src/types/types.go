@@ -20,4 +20,5 @@ type Dat struct {
 type GraphHisto struct {
 
 	Table map[int]Dat
+	Stats map[int]float64
 }

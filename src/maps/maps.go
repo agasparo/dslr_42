@@ -15,6 +15,17 @@ func Array_search(array map[int]string, to_search string) (int) {
 	return (-1)
 }
 
+func ArraySearchFloat(array map[int]float64, to_search float64) (int) {
+
+	for i := 0; i < len(array); i++ {
+
+		if array[i] == to_search {
+			return (i)
+		}
+	}
+	return (-1)
+}
+
 func MapSliceCount(data map[int]string, index int, add int) (map[int]string) {
 
 	if add == 0 {
