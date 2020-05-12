@@ -4,11 +4,10 @@ import (
 	"os"
 	"file"
 	"types"
-	"norm"
+	//"norm"
 	"Response"
 	"strings"
 	"dataOp"
-	"fmt"
 	"graph"
 	"strconv"
 )
@@ -30,15 +29,14 @@ func main() {
 	if res != 0 {
 		return
 	}
-	norm.NormalizeAllData(&Data)
+	//norm.NormalizeAllData(&Data)
 	dataOp.GetMat(Data.Categ, Data.Mat)
 	GraphV := dataOp.Calc(Data)
 	Tab := [4]string{"Ravenclaw", "Slytherin", "Gryffindor", "Hufflepuff"}
 	z := 0
-	for i := 0; i < len(GraphV.Table); i += 4 {
-		dataOp.GetValFor(&GraphV, i)
-		fmt.Println(GraphV.Stats)
+	i := 0
+	//for i := 0; i < len(GraphV.Table); i += 4 {
 		graph.DrawOne(GraphV, Tab, "outpout" + strconv.Itoa(z) + ".png", Data.Mat[z], i)
 		z++
-	}
+	//}
 }

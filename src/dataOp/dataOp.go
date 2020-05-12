@@ -3,7 +3,6 @@ package dataOp
 import (
 	"types"
 	"maths"
-	//"fmt"
 )
 
 func GetMat(cat map[int]string, mat map[int]string) {
@@ -43,22 +42,7 @@ func Getdatas(search string, index int, data map[int]types.Dat, school map[int]s
 	return (tmp)
 }
 
-func GetValFor(Data *types.GraphHisto, begin int) {
-
-	var V, Ec float64
-	var reset map[int]float64
-
-	Data.Stats = reset
-	Data.Stats = make(map[int]float64)
-	for i := begin; i < begin + 4; i++ {
-
-		V = maths.Variance(Data.Table[i].Cat)
-		Ec = maths.EcarType(V)
-		Data.Stats[len(Data.Stats)] = Ec
-	}
-}
-
-func CountSearch(data map[int]float64, percent int, add int, ref_min float64) (float64) {
+func CountSearch(data map[int]float64, percent int, add int, ref_min float64) (float64, float64) {
 
 	var per, count float64
 	var total int
@@ -66,7 +50,7 @@ func CountSearch(data map[int]float64, percent int, add int, ref_min float64) (f
 	count = maths.Count(data)
 	per = maths.Percentile(float64(add) * count, percent, data)
 	total = CountPerc(ref_min, per, data)
-	return (float64(total))
+	return float64(total), per
 }
 
 func CountPerc(min float64, max float64, data map[int]float64) (int) {
@@ -75,7 +59,10 @@ func CountPerc(min float64, max float64, data map[int]float64) (int) {
 
 	for i := 0; i < len(data); i++ {
 
-		if data[i] <= max && data[i] >= min {
+		if data[i] <= max && data[i] >= min && data[i] != min {
+			c++
+		}
+		if data[i] == 0 {
 			c++
 		}
 	}
