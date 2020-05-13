@@ -9,7 +9,7 @@ import (
 	"github.com/wcharczuk/go-chart/drawing"
 )
 
-func DrawOne(Data types.GraphHisto, Sc [4]string, name string, mat string, g int) {
+func DrawOne(Data types.GraphHisto, Sc [4]string, mat string, g int) {
 
 	var M, ET, C float64
 	var Axe_X, Axe_Y []float64
@@ -64,18 +64,24 @@ func DrawOne(Data types.GraphHisto, Sc [4]string, name string, mat string, g int
 			YValues: Axe_Y,
 		})
 	}
-	DrawHisto(All, mat, name)
+	DrawHisto(All, mat)
 }
 
-func DrawHisto(All []chart.Series, mat string,  name string) {
+func DrawHisto(All []chart.Series, mat string) {
 
 	graph := chart.Chart {
+		XAxis: chart.XAxis{
+			Name: "Ecart type",
+		},
+		YAxis: chart.YAxis{
+			Name: "nombres de notes",
+		},
 		Series: All,
 	}
 	graph.Elements = []chart.Renderable{
 		chart.LegendLeft(&graph),
 	}
-	f, _ := os.Create("graphs/" + name)
+	f, _ := os.Create("graphs/" + mat + ".png")
 	defer f.Close()
 	graph.Render(chart.PNG, f)
 }
