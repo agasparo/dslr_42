@@ -22,3 +22,12 @@ type GraphHisto struct {
 	Table map[int]Dat
 	Stats map[int]float64
 }
+
+type SaveCor struct {
+
+	Name1 string
+	Name2 string
+	Map1 	map[int]float64
+	Map2	map[int]float64
+	Cor 	float64
+}

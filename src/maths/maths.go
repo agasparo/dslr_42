@@ -90,6 +90,42 @@ func Variance(data map[int]float64) (float64) {
 	return (V)
 }
 
+func Covariance(x, y map[int]float64) (float64) {
+
+	var n, Sum, xm, ym, cx, cy float64
+
+	cx = Count(x)
+	cy = Count(y)
+
+	xm = Mean(cx, x)
+	ym = Mean(cy, y)
+
+	for i := 0; i < len(x); i++ {
+
+		n = float64(i + 1)
+		Sum += (x[i] - xm) * (y[i] - ym)
+
+	}
+	return (Sum / n)
+}
+
+func Correlation(x, y map[int]float64) (float64) {
+
+	var covar, etx, ety, cx, cy float64
+
+	if len(x) != len(y) {
+		return (-1.0)
+	}
+
+	covar = Covariance(x, y)
+	cx = Count(x)
+	cy = Count(y)
+	etx = Std(Mean(cx, x), cx, x)
+	ety = Std(Mean(cy, y), cy, y)
+
+	return (covar / (etx * ety))
+}
+
 func Percent(per float64, data map[int]float64) (float64) {
 
 	C := Count(data)
