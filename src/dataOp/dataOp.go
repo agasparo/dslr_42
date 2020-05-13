@@ -47,6 +47,7 @@ func Getdatas(search string, index int, data map[int]types.Dat, school map[int]s
 func ScatterPlot(data types.Datas, Resp *types.SaveCor) {
 
 	min := GetMin(data)
+	min = 1215
 	ReduceData(&data, int(min))
 	for cols := 6; cols < len(data.Table); cols++ {
 
