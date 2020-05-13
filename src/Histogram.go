@@ -34,9 +34,8 @@ func main() {
 	GraphV := dataOp.Calc(Data)
 	Tab := [4]string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"}
 	z := 0
-	i := 0
-	//for i := 0; i < len(GraphV.Table); i += 4 {
+	for i := 0; i < len(GraphV.Table); i += 4 {
 		graph.DrawOne(GraphV, Tab, "outpout" + strconv.Itoa(z) + ".png", Data.Mat[z], i)
 		z++
-	//}
+	}
 }

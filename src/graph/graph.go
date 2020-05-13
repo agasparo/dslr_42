@@ -2,71 +2,80 @@ package graph
 
 import (
 	"types"
-	//"github.com/wcharczuk/go-chart"
-	//"os"
-	"fmt"
 	"maths"
-	//"dataOp"
-	//"maps"
 	"sort"
+	"os"
+	"github.com/wcharczuk/go-chart"
+	"github.com/wcharczuk/go-chart/drawing"
 )
 
-func DrawOne(Data types.GraphHisto, Sc [4]string, name string, mat string, i int) {
+func DrawOne(Data types.GraphHisto, Sc [4]string, name string, mat string, g int) {
 
-	/*All := make(map[int]int)
+	var M, ET, C float64
+	var Axe_X, Axe_Y []float64
+	All := []chart.Series{}
+	St := chart.Style{}
 
-	for i := 0; i < 4; i++ {
-		min := maths.Min(Data.Stats)
-		key := maps.ArraySearchFloat(Data.Stats, min)
-		i = key
-		Data.Stats[key] = maths.Max(Data.Stats) + Data.Stats[key]
+	for i := g % 4; i < 4; i++ {
+
+		res := maths.MaptoSlice(Data.Table[g + i].Cat)
+		sort.Float64s(res)
+		nData := maths.SliceToMap(res)
+		C = maths.Count(nData)
+		M = maths.Mean(C, nData)
+		ET = maths.Std(M, C, nData)
+
+		Axe_X = append(Axe_X, 0.0, M - (2 * ET), M - ET, M, M + ET, M + (2 * ET), 1.0)
+		Axe_Y = append(Axe_Y, 0.0, maths.Percent(2.1, nData), maths.Percent(13.6, nData), maths.Percent(34.1, nData), maths.Percent(13.6, nData), maths.Percent(2.1, nData), 1.0)
+
+		if i == 0 {
+			St = chart.Style {
+					StrokeColor: drawing.ColorRed,              
+					FillColor:   drawing.ColorRed.WithAlpha(64),
+			}
+		}
+
+		if i == 1 {
+			St = chart.Style{
+					StrokeColor: drawing.ColorBlue,              
+					FillColor:   drawing.ColorBlue.WithAlpha(64),
+			}
+		}
+
+		if i == 2 {
+			St = chart.Style{
+					StrokeColor: drawing.ColorGreen,              
+					FillColor:   drawing.ColorGreen.WithAlpha(64),
+			}
+		}
+
+		if i == 3 {
+			ColorCyan := drawing.Color{R: 0, G: 217, B: 210, A: 255}
+			St = chart.Style{
+					StrokeColor: ColorCyan,              
+					FillColor:   ColorCyan.WithAlpha(64),
+			}
+		}
+
+		All = append(All, chart.ContinuousSeries{
+			Name:  Sc[i],
+			Style: St,
+			XValues: Axe_X,
+			YValues: Axe_Y,
+		})
 	}
-	fmt.Println(All)*/
-	DrawHisto(Data, Sc, name, mat, i)
+	DrawHisto(All, mat, name)
 }
 
-func DrawHisto(Data types.GraphHisto, Sc [4]string, name string, mat string, i int) {
-	
-	//v := make(map[int]float64)
-	//var n float64
+func DrawHisto(All []chart.Series, mat string,  name string) {
 
-	//v = Data.Table[i].Cat
-	for i = i; i < 4; i++ {
-		fmt.Printf("matiere : %s, sc : %s\n", mat, Sc[i])
-		res := maths.MaptoSlice(Data.Table[i].Cat)
-		sort.Float64s(res)
-		fmt.Printf("firs %f, last : %f\n", res[0], res[len(res) - 1])
-		fmt.Printf("len : %d\n", len(res))
+	graph := chart.Chart {
+		Series: All,
 	}
-
-	/*v[0], n = dataOp.CountSearch(Data.Table[i + 0].Cat, 4, 1, 0.0)
-	v[1], n = dataOp.CountSearch(Data.Table[i + 0].Cat, 2, 1, n)
-	v[2], n = dataOp.CountSearch(Data.Table[i + 0].Cat, 4, 3, n)
-	v[3], _ = dataOp.CountSearch(Data.Table[i + 0].Cat, 1, 1, n)
-
-	v[4], n = dataOp.CountSearch(Data.Table[i + 1].Cat, 4, 1, 0.0)
-	v[5], n = dataOp.CountSearch(Data.Table[i + 1].Cat, 2, 1, n)
-	v[6], n = dataOp.CountSearch(Data.Table[i + 1].Cat, 4, 3, n)
-	v[7], _ = dataOp.CountSearch(Data.Table[i + 1].Cat, 1, 1, n)
-
-	v[8], n = dataOp.CountSearch(Data.Table[i + 2].Cat, 4, 1, 0.0)
-	v[9], n = dataOp.CountSearch(Data.Table[i + 2].Cat, 2, 1, n)
-	v[10], n = dataOp.CountSearch(Data.Table[i + 2].Cat, 4, 3, n)
-	v[11], _ = dataOp.CountSearch(Data.Table[i + 2].Cat, 1, 1, n)
-
-	v[12], n = dataOp.CountSearch(Data.Table[i + 3].Cat, 4, 1, 0.0)
-	v[13], n = dataOp.CountSearch(Data.Table[i + 3].Cat, 2, 1, n)
-	v[14], n = dataOp.CountSearch(Data.Table[i + 3].Cat, 4, 3, n)
-	v[15], _ = dataOp.CountSearch(Data.Table[i + 3].Cat, 1, 1, n)*/
-
-	/*fmt.Printf("%s%s%s\n", "Element", "Value", "Histogram")
-
-    for z := 0; z < len(v); z++ {
-        fmt.Printf("%d %f        ", z, v[z])
-
-        for j := 1.0; j < v[z]; j++ {
-            fmt.Printf("%c", '∎')
-        }
-        fmt.Println()
-    }*/
+	graph.Elements = []chart.Renderable{
+		chart.LegendLeft(&graph),
+	}
+	f, _ := os.Create("graphs/" + name)
+	defer f.Close()
+	graph.Render(chart.PNG, f)
 }

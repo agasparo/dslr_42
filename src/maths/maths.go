@@ -90,9 +90,10 @@ func Variance(data map[int]float64) (float64) {
 	return (V)
 }
 
-func EcarType(v float64) (float64) {
+func Percent(per float64, data map[int]float64) (float64) {
 
-	return(math.Sqrt(v))
+	C := Count(data)
+	return (C * per / 100)
 }
 
 func MaptoSlice(data map[int]float64) ([]float64) {
@@ -101,6 +102,16 @@ func MaptoSlice(data map[int]float64) ([]float64) {
 
 	for i := 0; i < len(data); i++ {
 		Tab = append(Tab, data[i])
+	}
+	return (Tab)
+}
+
+func SliceToMap(data []float64) (map[int]float64) {
+
+	Tab := make(map[int]float64)
+
+	for i := 0; i < len(data); i++ {
+		Tab[len(Tab)] = data[i]
 	}
 	return (Tab)
 }
