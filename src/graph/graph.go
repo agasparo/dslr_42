@@ -35,7 +35,8 @@ func DrawHisto(Data types.GraphHisto, Sc [4]string, name string, mat string, i i
 		fmt.Printf("matiere : %s, sc : %s\n", mat, Sc[i])
 		res := maths.MaptoSlice(Data.Table[i].Cat)
 		sort.Float64s(res)
-		fmt.Println(res[0])
+		fmt.Printf("firs %f, last : %f\n", res[0], res[len(res) - 1])
+		fmt.Printf("len : %d\n", len(res))
 	}
 
 	/*v[0], n = dataOp.CountSearch(Data.Table[i + 0].Cat, 4, 1, 0.0)

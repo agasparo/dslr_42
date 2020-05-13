@@ -3,6 +3,7 @@ package dataOp
 import (
 	"types"
 	"maths"
+	"math"
 )
 
 func GetMat(cat map[int]string, mat map[int]string) {
@@ -35,7 +36,7 @@ func Getdatas(search string, index int, data map[int]types.Dat, school map[int]s
 	tmp := make(map[int]float64)
 
 	for z := 0; z < len(data[0].Cat); z++ {
-		if school[z] == search {
+		if school[z] == search && !math.IsNaN(data[index].Cat[z]) {
 			tmp[len(tmp)] = data[index].Cat[z]
 		}
 	}

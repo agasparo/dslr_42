@@ -4,7 +4,7 @@ import (
 	"os"
 	"file"
 	"types"
-	//"norm"
+	"norm"
 	"Response"
 	"strings"
 	"dataOp"
@@ -29,7 +29,7 @@ func main() {
 	if res != 0 {
 		return
 	}
-	//norm.NormalizeAllData(&Data)
+	norm.NormalizeAllData(&Data)
 	dataOp.GetMat(Data.Categ, Data.Mat)
 	GraphV := dataOp.Calc(Data)
 	Tab := [4]string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"}

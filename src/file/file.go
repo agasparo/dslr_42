@@ -9,6 +9,7 @@ import (
 	"Response"
 	"types"
 	"maps"
+	"math"
 )
 
 func ReadFile(Dat *types.Datas, File string, t int) (int) {
@@ -39,7 +40,7 @@ func ReadFile(Dat *types.Datas, File string, t int) (int) {
 			return (2)
 		}
 		if line == 0 {
-			RempData(record, Dat.Table, Dat.Categ, 0)
+			RempData(record, Dat.Table, Dat.Categ, 0, t)
 			if t == 1 {
 				index = maps.Array_search(Dat.Categ, "Hogwarts House")
 				if index == -1 {
@@ -51,7 +52,7 @@ func ReadFile(Dat *types.Datas, File string, t int) (int) {
 			if t == 1 {
 				RempHisto(record, Dat.School, Dat.Mat, index)
 			}
-			RempData(record, Dat.Table, Dat.Categ, 1)
+			RempData(record, Dat.Table, Dat.Categ, 1, t)
 		}
 		line++
 	}
@@ -68,7 +69,7 @@ func RempHisto(record []string, S map[int]string, M map[int]string, iS int) {
 	}
 }
 
-func RempData(record []string, Data map[int]types.Dat, Categ map[int]string, t int) {
+func RempData(record []string, Data map[int]types.Dat, Categ map[int]string, t int, count int) {
 
 	if t == 0 {
 
@@ -80,8 +81,16 @@ func RempData(record []string, Data map[int]types.Dat, Categ map[int]string, t i
 		}
 	} else {
 		for i := 0; i < len(record); i++ {
-			if IsNumeric(record[i]) {
+			if IsNumeric(record[i]) && count == 0 {
 				Data[i].Cat[len(Data[i].Cat)], _ = strconv.ParseFloat(record[i], 64)
+			}
+			if count == 1 {
+				nb, err := strconv.ParseFloat(record[i], 64)
+				if err != nil {
+					Data[i].Cat[len(Data[i].Cat)] = math.NaN()
+				} else {
+					Data[i].Cat[len(Data[i].Cat)] = nb
+				}
 			}
 		}
 	}
