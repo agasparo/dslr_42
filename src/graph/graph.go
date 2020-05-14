@@ -85,3 +85,27 @@ func DrawHisto(All []chart.Series, mat string) {
 	defer f.Close()
 	graph.Render(chart.PNG, f)
 }
+
+func DrawScatterPlot(Res types.SaveCor) {
+
+	viridisByY := func(xr, yr chart.Range, index int, x, y float64) drawing.Color {
+		return chart.Viridis(y, yr.GetMin(), yr.GetMax())
+	}
+
+	graph := chart.Chart{
+		Series: []chart.Series{
+			chart.ContinuousSeries{
+				Style: chart.Style{
+					StrokeWidth:      chart.Disabled,
+					DotWidth:         5,
+					DotColorProvider: viridisByY,
+				},
+				XValues: maths.MaptoSlice(Res.Map1),
+				YValues: maths.MaptoSlice(Res.Map2),
+			},
+		},
+	}
+	f, _ := os.Create("graphs/ScatterPlot.png")
+	defer f.Close()
+	graph.Render(chart.PNG, f)
+}

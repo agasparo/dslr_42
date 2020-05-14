@@ -8,6 +8,7 @@ import (
 	"strings"
 	"dataOp"
 	"fmt"
+	"graph"
 )
 
 func main() {
@@ -29,7 +30,6 @@ func main() {
 	}
 	Res := types.SaveCor{}
 	dataOp.ScatterPlot(Data, &Res)
-	fmt.Println(Res.Cor)
-	fmt.Println(Res.Name1)
-	fmt.Println(Res.Name2)
+	fmt.Printf("Most : %s and %s with cor : %f\n", Res.Name1, Res.Name2, Res.Cor)
+	graph.DrawScatterPlot(Res)
 }
