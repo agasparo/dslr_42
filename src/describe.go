@@ -31,7 +31,7 @@ func main() {
 		return
 	}
 	tab := Describe(Data.Table, Data.Categ)
-	Data.Categ = maps.Reindex(Data.Categ)
+	Data.Categ = maps.Reindex1(Data.Categ)
 	show.FormatLine(show.Header(Data.Categ), tab)
 }
 

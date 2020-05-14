@@ -67,6 +67,36 @@ func Reindex(data map[int]float64) (map[int]float64) {
 	return (tab)
 }
 
+func Reindex1(data map[int]string) (map[int]string) {
+
+	tab := make(map[int]string)	
+
+	for i := getminkey1(data); i < len(data); i++ {
+
+		if data[i] != "" {
+			tab[len(tab)] = data[i]
+		}
+	}
+
+	if getminkey1(data) == len(data) {
+		tab[0] = data[len(data)]
+	}
+	return (tab)
+}
+
+func getminkey1(data map[int]string) (int) {
+
+	min := -1
+
+	for index, element := range data {
+
+		if element != "" && (min == -1 || index < min) {
+			min = index
+		}
+	}
+	return (min)
+}
+
 func getminkey(data map[int]float64) (int) {
 
 	min := -1

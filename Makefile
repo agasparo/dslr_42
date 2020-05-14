@@ -3,11 +3,19 @@ include .env
 init:
 	go get -u github.com/fatih/color
 	go get -u github.com/wcharczuk/go-chart
-	go build src/train/train.go
-	go build src/predict/predict.go
+	go get -u github.com/mattn/go-pairplot
+	go get -u gonum.org/v1/plot
+	go get -u gonum.org/v1/plot/vg
+
+	go build src/describe.go
+	go build src/histogram.go
+	go build src/scatter_plot.go
+	go build src/pair_plot.go
 
 clean: 
-	rm $(TRAINNAME)
-	rm $(RESNAME)
+	rm $(P1)
+	rm $(P2)
+	rm $(P3)
+	rm $(P4)
 
 all: init
