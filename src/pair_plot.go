@@ -34,5 +34,5 @@ func main() {
 		return
 	}
 	graph.DrawPairPlot(name)
-	os.Remove(name)
+	//os.Remove(name)
 }

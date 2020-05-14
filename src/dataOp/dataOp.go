@@ -73,7 +73,6 @@ func ScatterPlot(data types.Datas, Resp *types.SaveCor) {
 
 func PairPlot(data types.Datas) (string, int) {
 
-	ReduceData(&data)
 	file, err := os.Create("datasets/result.csv")
     if !checkError("Cannot create file", err) {
     	return "", 1
@@ -86,6 +85,7 @@ func PairPlot(data types.Datas) (string, int) {
     header := FormateHeader(data.Categ, 6)
     header = append(header, "School")
     Write(header, writer)
+    ReduceData(&data)
     for z := 0; z < len(data.Table[0].Cat); z++{
 
     	ndat := ""
@@ -93,7 +93,9 @@ func PairPlot(data types.Datas) (string, int) {
 
     		ndat += fmt.Sprintf("%f,", data.Table[i].Cat[z])
     	}
-    	Write(FormateData(ndat, data.School[z]), writer)
+    	if data.School[z] != "" && ndat != "0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000," {
+    		Write(FormateData(ndat, data.School[z]), writer)
+    	}
     }
     return "datasets/result.csv", 0
 }
