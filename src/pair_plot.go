@@ -8,6 +8,7 @@ import (
 	"strings"
 	"dataOp"
 	"graph"
+	"norm"
 )
 
 func main() {
@@ -27,6 +28,7 @@ func main() {
 	if res != 0 {
 		return
 	}
+	norm.NormalizeAllData(&Data)
 	name, err := dataOp.PairPlot(Data)
 	if err == 1 {
 		return

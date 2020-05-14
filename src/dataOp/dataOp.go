@@ -144,6 +144,7 @@ func ReduceData(data *types.Datas) {
 		for z := 0; z < len(data.Table[i].Cat); z++ {
 			if math.IsNaN(data.Table[i].Cat[z]) {
 				DeleteData(data, z)
+				delete(data.School, z)
 			}
 		}
 	}
