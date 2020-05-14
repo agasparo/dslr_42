@@ -4,7 +4,6 @@ import (
 	"os"
 	"file"
 	"types"
-	"norm"
 	"Response"
 	"strings"
 	"dataOp"
@@ -24,11 +23,10 @@ func main() {
 		return
 	}
 	Data := types.Datas{}
-	res := file.ReadFile(&Data, args[0], 0)
+	res := file.ReadFile(&Data, args[0], 1)
 	if res != 0 {
 		return
 	}
-	norm.NormalizeAllData(&Data)
 	Res := types.SaveCor{}
 	dataOp.ScatterPlot(Data, &Res)
 	fmt.Println(Res.Cor)

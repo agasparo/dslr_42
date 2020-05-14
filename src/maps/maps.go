@@ -52,15 +52,13 @@ func MapSliceCount(data map[int]string, index int, add int) (map[int]string) {
 	return (data)
 }
 
-func Reindex(data map[int]string) (map[int]string) {
+func Reindex(data map[int]float64) (map[int]float64) {
 
-	tab := make(map[int]string)
+	tab := make(map[int]float64)
 
 	for i := getminkey(data); i < len(data); i++ {
 
-		if data[i] != "" {
-			tab[len(tab)] = data[i]
-		}
+		tab[len(tab)] = data[i]
 	}
 
 	if getminkey(data) == len(data) {
@@ -69,28 +67,26 @@ func Reindex(data map[int]string) (map[int]string) {
 	return (tab)
 }
 
-func getminkey(data map[int]string) (int) {
+func getminkey(data map[int]float64) (int) {
 
 	min := -1
 
-	for index, element := range data {
+	for index, _ := range data {
 
-		if element != "" && (min == -1 || index < min) {
+		if (min == -1 || index < min) {
 			min = index
 		}
 	}
 	return (min)
 }
 
-func Clean(data map[int]string) (map[int]string) {
+func Clean(data map[int]float64) (map[int]float64) {
 
-	tab := make(map[int]string)
+	tab := make(map[int]float64)
 
 	for i := 0; i < len(data); i++ {
 
-		if data[i] != "" {
-			tab[len(tab)] = data[i]
-		}
+		tab[len(tab)] = data[i]
 	}
 	return (tab)
 }

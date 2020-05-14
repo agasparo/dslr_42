@@ -5,6 +5,7 @@ import (
 	"math"
 	"fmt"
 	"maths"
+	"maps"
 )
 
 func GetMat(cat map[int]string, mat map[int]string) {
@@ -46,9 +47,7 @@ func Getdatas(search string, index int, data map[int]types.Dat, school map[int]s
 
 func ScatterPlot(data types.Datas, Resp *types.SaveCor) {
 
-	min := GetMin(data)
-	min = 1215
-	ReduceData(&data, int(min))
+	ReduceData(&data)
 	for cols := 6; cols < len(data.Table); cols++ {
 
 		for n_cols := 6; n_cols < len(data.Table); n_cols++ {
@@ -68,35 +67,25 @@ func ScatterPlot(data types.Datas, Resp *types.SaveCor) {
 	}
 }
 
-func GetMin(data types.Datas) (float64) {
-
-	min := maths.Count(data.Table[6].Cat)
-
-	for i := 7; i < len(data.Table); i++ {
-		c := maths.Count(data.Table[i].Cat)
-		if c < min {
-			min = c
-		}
-	}
-	return (min)
-}
-
-func ReduceData(data *types.Datas, max int) {
+func ReduceData(data *types.Datas) {
 
 	for i := 6; i < len(data.Table); i++ {
 
-		N := types.Dat{}
-		N.Cat = Reduce(data.Table[i].Cat, max)
-		data.Table[i] = N
+		for z := 0; z < len(data.Table[i].Cat); z++ {
+			if math.IsNaN(data.Table[i].Cat[z]) {
+				DeleteData(data, z)
+			}
+		}
 	}
 }
 
-func Reduce(data map[int]float64, max int) (map[int]float64) {
+func DeleteData(data *types.Datas, z int) {
 
-	tab := make(map[int]float64)
-
-	for i := 0; i < max; i++ {
-		tab[len(tab)] = data[i]
-	}
-	return (tab)
+	for a := 6; a < len(data.Table); a++ {
+		delete(data.Table[a].Cat, z)
+		N := types.Dat{}
+		N.Cat = maps.Reindex(data.Table[a].Cat)
+		N.Cat = maps.Clean(N.Cat)
+		data.Table[a] = N
+	} 
 }

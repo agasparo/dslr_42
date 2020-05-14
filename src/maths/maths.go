@@ -120,6 +120,15 @@ func Correlation(x, y map[int]float64) (float64) {
 	covar = Covariance(x, y)
 	cx = Count(x)
 	cy = Count(y)
+
+	SortTablex := MaptoSlice(x)
+	sort.Float64s(SortTablex)
+	x = SliceToMap(SortTablex)
+
+	SortTabley := MaptoSlice(y)
+	sort.Float64s(SortTabley)
+	y = SliceToMap(SortTabley)
+
 	etx = Std(Mean(cx, x), cx, x)
 	ety = Std(Mean(cy, y), cy, y)
 
