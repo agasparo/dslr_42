@@ -7,6 +7,11 @@ import (
 	"os"
 	"github.com/wcharczuk/go-chart"
 	"github.com/wcharczuk/go-chart/drawing"
+
+	"github.com/mattn/go-pairplot"
+	"gonum.org/v1/plot"
+	"gonum.org/v1/plot/vg"
+	"log"
 )
 
 func DrawOne(Data types.GraphHisto, Sc [4]string, mat string, g int) {
@@ -108,4 +113,19 @@ func DrawScatterPlot(Res types.SaveCor) {
 	f, _ := os.Create("graphs/ScatterPlot.png")
 	defer f.Close()
 	graph.Render(chart.PNG, f)
+}
+
+func DrawPairPlot(name string) {
+	p, err := plot.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+	pp, err := pairplot.NewPairPlotCSV(name)
+	if err != nil {
+		log.Fatal(err)
+	}
+	pp.SetHue("School")
+	p.HideAxes()
+	p.Add(pp)
+	p.Save(8*vg.Inch, 8*vg.Inch, "graphs/pair_plot.png")
 }

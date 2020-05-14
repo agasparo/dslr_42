@@ -6,6 +6,10 @@ import (
 	"fmt"
 	"maths"
 	"maps"
+	"os"
+	"log"
+	"encoding/csv"
+	"strings"
 )
 
 func GetMat(cat map[int]string, mat map[int]string) {
@@ -65,6 +69,72 @@ func ScatterPlot(data types.Datas, Resp *types.SaveCor) {
 			}
 		}
 	}
+}
+
+func PairPlot(data types.Datas) (string, int) {
+
+	ReduceData(&data)
+	file, err := os.Create("datasets/result.csv")
+    if !checkError("Cannot create file", err) {
+    	return "", 1
+    }
+    defer file.Close()
+
+    writer := csv.NewWriter(file)
+    defer writer.Flush()
+
+    header := FormateHeader(data.Categ, 6)
+    header = append(header, "School")
+    Write(header, writer)
+    for z := 0; z < len(data.Table[0].Cat); z++{
+
+    	ndat := ""
+    	for i := 6; i < len(data.Table); i++ {
+
+    		ndat += fmt.Sprintf("%f,", data.Table[i].Cat[z])
+    	}
+    	Write(FormateData(ndat, data.School[z]), writer)
+    }
+    return "datasets/result.csv", 0
+}
+
+func Write(data []string, writer *csv.Writer) {
+
+    err := writer.Write(data)
+    if !checkError("Cannot write to file", err) {
+    	return
+    }
+}
+
+func checkError(message string, err error) (bool) {
+    if err != nil {
+        log.Fatal(message, err)
+        return (false)
+    }
+    return (true)
+}
+
+func FormateHeader(data map[int]string, deb int) ([]string) {
+
+	var tab []string
+
+	for i := deb; i < len(data); i++ {
+		tab = append(tab, data[i])
+	}
+	return (tab)
+}
+
+func FormateData(data string, sc string) ([]string) {
+
+	var tab []string
+
+
+	e := strings.Split(data, ",")
+	for i := 0; i < len(e) - 1; i++ {
+		tab = append(tab, e[i])
+	}
+	tab = append(tab, sc)
+	return (tab)
 }
 
 func ReduceData(data *types.Datas) {
