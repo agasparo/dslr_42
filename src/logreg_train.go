@@ -37,5 +37,6 @@ func main() {
 	norm.NormalizeAllData(&Data)
 	Train_Data := types.DataTrain{}
 	dataOp.FormatData(&Train_Data, Data)
-	fmt.Println(Train_Data.Moy)
+	fmt.Println(Train_Data)
 }
+
