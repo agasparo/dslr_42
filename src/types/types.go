@@ -31,3 +31,8 @@ type SaveCor struct {
 	Map2	map[int]float64
 	Cor 	float64
 }
+
+type DataTrain struct {
+
+	Moy	map[int]float64
+}

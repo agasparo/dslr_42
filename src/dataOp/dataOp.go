@@ -162,3 +162,44 @@ func DeleteData(data *types.Datas, z int) {
 		data.Table[a] = N
 	} 
 }
+
+func SupprUs(ids []int, data types.Datas) (types.Datas) {
+
+	Dats := types.Datas{}
+	Dats.Categ = data.Categ
+	Dats.School = data.School
+	Dats.Mat = data.Mat
+	Dats.Table = make(map[int]types.Dat)
+
+	for i := 0; i < len(data.Table); i++ {
+
+		if !InIDs(ids, i) {
+			Dats.Table[len(Dats.Table)] = data.Table[i]
+		}
+	}
+	return (Dats)
+}
+
+func InIDs(ids []int, search int) (bool) {
+
+	for i := 0; i < len(ids); i++ {
+		if ids[i] == search {
+			return (true)
+		}
+	}
+	return (false)
+}
+
+func FormatData(res *types.DataTrain, data types.Datas) {
+
+	res.Moy = make(map[int]float64)
+
+	for z := 0; z < len(data.Table[0].Cat); z++ {
+
+		Calc := make(map[int]float64)
+		for i := 0; i < len(data.Table); i++ {
+			Calc[i] = data.Table[i].Cat[z]
+		}
+		res.Moy[len(res.Moy)] = maths.Mean(maths.Count(Calc), Calc)
+	}
+}
