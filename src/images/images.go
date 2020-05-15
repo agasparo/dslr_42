@@ -8,7 +8,28 @@ import (
     "os"
     "image"
     "image/draw"
+    "os/exec"
+    "runtime"
 )
+
+func DrawOnTerm(name string) {
+
+	var cmd *exec.Cmd
+
+	if runtime.GOOS == "linux" {
+        cmd = exec.Command("feh", name)
+    } else {
+        cmd = exec.Command("sh", "catimg.sh", name)
+    }
+    stdout, err := cmd.Output()
+
+    if err != nil {
+        Response.Print(fmt.Sprintf("%s\n", err))
+        return
+    }
+
+    fmt.Println(string(stdout))
+}
 
 func Resize(name string, ratio float64) {
 

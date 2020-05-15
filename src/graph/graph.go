@@ -85,14 +85,14 @@ func DrawOne(Data types.GraphHisto, Sc [4]string, mat string, g int, verbose boo
 		})
 	}
 	DrawHisto(All, mat)
-	images.Resize("graphs/" + mat + ".png", 0.5)
+	images.Resize("graphs/" + mat + ".png", 0.35)
 }
 
 func DrawHisto(All []chart.Series, mat string) {
 
 	graph := chart.Chart {
 		XAxis: chart.XAxis{
-			Name: "Ecart type",
+			Name: "Ecart type | " + mat,
 		},
 		YAxis: chart.YAxis{
 			Name: "nombres de notes",

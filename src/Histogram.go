@@ -82,4 +82,6 @@ func main() {
 	images.AppendRow("graphs/test0.png", "graphs/test3.png", "graphs/test1.png")
 	images.AppendRow("graphs/test3.png", "graphs/test2.png", "graphs/test0.png")
 	images.AppendRow("graphs/histogram.png", "graphs/" + Data.Mat[len(Data.Mat) - 1] + ".png", "graphs/test3.png")
+
+	images.DrawOnTerm("graphs/histogram.png")
 }
