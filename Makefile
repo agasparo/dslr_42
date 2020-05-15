@@ -6,6 +6,7 @@ init:
 	go get -u github.com/mattn/go-pairplot
 	go get -u gonum.org/v1/plot
 	go get -u gonum.org/v1/plot/vg
+	go get -u github.com/nfnt/resize
 
 	go build src/describe.go
 	go build src/histogram.go

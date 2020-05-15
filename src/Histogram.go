@@ -66,5 +66,4 @@ func main() {
 		graph.DrawOne(GraphV, Tab, Data.Mat[z], i, verbose)
 		z++
 	}
-
 }

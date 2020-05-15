@@ -7,13 +7,13 @@ import (
 	"os"
 	"github.com/wcharczuk/go-chart"
 	"github.com/wcharczuk/go-chart/drawing"
-
 	"github.com/mattn/go-pairplot"
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/vg"
 	"log"
 	"Response"
 	"fmt"
+	"images"
 )
 
 func DrawOne(Data types.GraphHisto, Sc [4]string, mat string, g int, verbose bool) {
@@ -85,6 +85,7 @@ func DrawOne(Data types.GraphHisto, Sc [4]string, mat string, g int, verbose boo
 		})
 	}
 	DrawHisto(All, mat)
+	images.Resize("graphs/" + mat + ".png")
 }
 
 func DrawHisto(All []chart.Series, mat string) {
