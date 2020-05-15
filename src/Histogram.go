@@ -68,6 +68,9 @@ func main() {
 		graph.DrawOne(GraphV, Tab, Data.Mat[z], i, verbose)
 		z++
 	}
+
+	Response.Sucess("Append image ...")
+
 	for a := 0; a < 13; a++ {
 
 		if a % 2 == 0 && a != len(Data.Mat) - 1 {
