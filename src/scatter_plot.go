@@ -9,14 +9,24 @@ import (
 	"dataOp"
 	"fmt"
 	"graph"
+	"images"
 )
 
 func main() {
 
+	var verbose bool
+	
 	args := os.Args[1:]
-	if len(args) != 1 {
-		Response.Print("usage : ./describe [file_name.csv]")
+	if len(args) < 1 || len(args) > 2 {
+		Response.Print("usage : ./describe [file_name.csv] [-v : verbose]")
 		return
+	}
+	if len(args) == 2 && args[1] != "-v" {
+		Response.Print("usage : ./describe [file_name.csv] [-v : verbose]")
+		return
+	}
+	if len(args) == 2 && args[1] == "-v" {
+		verbose = true
 	}
 	ext := strings.Split(args[0], ".")
 	if ext[len(ext) -1] != "csv" {
@@ -29,7 +39,8 @@ func main() {
 		return
 	}
 	Res := types.SaveCor{}
-	dataOp.ScatterPlot(Data, &Res)
-	fmt.Printf("Most : %s and %s with cor : %f\n", Res.Name1, Res.Name2, Res.Cor)
+	dataOp.ScatterPlot(Data, &Res, verbose)
+	Response.Sucess(fmt.Sprintf("Most : %s and %s with cor : %f\n", Res.Name1, Res.Name2, Res.Cor))
 	graph.DrawScatterPlot(Res)
+	images.DrawOnTerm("graphs/ScatterPlot.png")
 }

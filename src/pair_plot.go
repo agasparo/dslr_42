@@ -8,6 +8,8 @@ import (
 	"strings"
 	"dataOp"
 	"graph"
+	"images"
+	"say"
 )
 
 func main() {
@@ -31,6 +33,10 @@ func main() {
 	if err == 1 {
 		return
 	}
+	Response.Sucess("Calculing pair plot ...")
 	graph.DrawPairPlot(name)
 	os.Remove(name)
+	Response.Sucess("Drawing histogram on term ...")
+	images.DrawOnTerm("graphs/pair_plot.png")
+	say.PairPlot()
 }

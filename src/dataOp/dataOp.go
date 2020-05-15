@@ -49,7 +49,7 @@ func Getdatas(search string, index int, data map[int]types.Dat, school map[int]s
 	return (tmp)
 }
 
-func ScatterPlot(data types.Datas, Resp *types.SaveCor) {
+func ScatterPlot(data types.Datas, Resp *types.SaveCor, verbose bool) {
 
 	ReduceData(&data)
 	for cols := 6; cols < len(data.Table); cols++ {
@@ -58,7 +58,9 @@ func ScatterPlot(data types.Datas, Resp *types.SaveCor) {
 
 			if n_cols > cols {
 				cor := maths.Correlation(data.Table[cols].Cat, data.Table[n_cols].Cat)
-				fmt.Printf("Correlation between %s | %s : %f\n", data.Categ[cols], data.Categ[n_cols], cor)
+				if verbose == true {
+					fmt.Printf("Correlation between %s | %s : %f\n", data.Categ[cols], data.Categ[n_cols], cor)
+				}
 				if math.Abs(cor) > Resp.Cor {
 					Resp.Cor = math.Abs(cor)
 					Resp.Name1 = data.Categ[cols]

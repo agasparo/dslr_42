@@ -12,3 +12,13 @@ Bonus :
  	- affichage dans le terminal
  	- reponse a la question
  	- verbose
+
+ - scatter_plot :
+
+ 	- affichage dans le terminal
+ 	- verbose
+
+ - pair_plot :
+
+ 	- affichage dans le terminal
+ 	- reponse a la question
