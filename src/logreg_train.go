@@ -12,32 +12,6 @@ import (
 	"math"
 )
 
-func main() {
-
-	args := os.Args[1:]
-	if len(args) != 1 {
-		Response.Print("usage : ./describe [file_name.csv]")
-		return
-	}
-	ext := strings.Split(args[0], ".")
-	if ext[len(ext) -1] != "csv" {
-		Response.Print("Your file must be a .csv")
-		return
-	}
-	Data := types.Datas{}
-	res := file.ReadFile(&Data, args[0], 1)
-	if res != 0 {
-		return
-	}
-	Data = dataOp.SupprUs([]int{0, 1, 2, 3, 4, 5, 6, 9, 16}, Data)
-	norm.NormalizeAllData(&Data)
-	Train_Data := types.DataTrain{}
-	dataOp.FormatData(&Train_Data, Data)
-	Learn := types.Learning{ 0.3, 1, 0.0, 1.0, 0.000001, make(map[int]float64) }
-	Train(Train_Data, &Learn, Data)
-	fmt.Println(Learn)
-}
-
 /*
 	y tab de 0 et de 1
 		pour nous 0 ou 1 cest ecole ou pas ecole
@@ -65,6 +39,32 @@ func main() {
 				gradient * learning rate
 
  */
+
+func main() {
+
+	args := os.Args[1:]
+	if len(args) != 1 {
+		Response.Print("usage : ./describe [file_name.csv]")
+		return
+	}
+	ext := strings.Split(args[0], ".")
+	if ext[len(ext) -1] != "csv" {
+		Response.Print("Your file must be a .csv")
+		return
+	}
+	Data := types.Datas{}
+	res := file.ReadFile(&Data, args[0], 1)
+	if res != 0 {
+		return
+	}
+	Data = dataOp.SupprUs([]int{0, 1, 2, 3, 4, 5, 6, 9, 16}, Data)
+	norm.NormalizeAllData(&Data)
+	Train_Data := types.DataTrain{}
+	dataOp.FormatData(&Train_Data, Data)
+	Learn := types.Learning{ 0.3, 1, 0.0, 1.0, 0.000001, make(map[int]float64) } // pour iteration apres 100000
+	Train(Train_Data, &Learn, Data)
+	fmt.Println(Learn)
+}
 
 func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 

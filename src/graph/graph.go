@@ -12,9 +12,11 @@ import (
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/vg"
 	"log"
+	"Response"
+	"fmt"
 )
 
-func DrawOne(Data types.GraphHisto, Sc [4]string, mat string, g int) {
+func DrawOne(Data types.GraphHisto, Sc [4]string, mat string, g int, verbose bool) {
 
 	var M, ET, C float64
 	var Axe_X, Axe_Y []float64
@@ -29,6 +31,19 @@ func DrawOne(Data types.GraphHisto, Sc [4]string, mat string, g int) {
 		C = maths.Count(nData)
 		M = maths.Mean(C, nData)
 		ET = maths.Std(M, C, nData)
+
+		if verbose == true {
+
+			str := fmt.Sprintf("-------------------------------------\n")
+			str += fmt.Sprintf("Subject : %s\n", mat)
+			str += fmt.Sprintf("School : %s\n\n", Sc[i])
+			str += fmt.Sprintf("Count : %f\n", C)
+			str += fmt.Sprintf("Average : %f\n", M)
+			str += fmt.Sprintf("Standard deviation : %f\n", ET)
+			str += fmt.Sprintf("-------------------------------------\n")
+
+			Response.PrintVerbose(str)
+		}
 
 		Axe_X = append(Axe_X, 0.0, M - (2 * ET), M - ET, M, M + ET, M + (2 * ET), 1.0)
 		Axe_Y = append(Axe_Y, 0.0, maths.Percent(2.1, nData), maths.Percent(13.6, nData), maths.Percent(34.1, nData), maths.Percent(13.6, nData), maths.Percent(2.1, nData), 1.0)

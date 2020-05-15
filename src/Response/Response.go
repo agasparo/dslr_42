@@ -13,3 +13,13 @@ func Sucess(str string) {
 	
 	color.Green(str)
 }
+
+func PrintVerboseStep(str string) {
+
+	color.Magenta(str)
+}
+
+func PrintVerbose(str string) {
+
+	color.White(str)
+}
