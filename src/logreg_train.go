@@ -9,7 +9,8 @@ import (
 	"dataOp"
 	"fmt"
 	"norm"
-	"math"
+	//"math"
+	"gonum.org/v1/gonum/mat"
 )
 
 /*
@@ -83,15 +84,26 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 
 func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float64) {
 
-	var z map[int]float64
-	var length, ac_cost float64
+	//var z map[int]float64
+	//var length, ac_cost float64
+	var tmpMat mat.Dense
 
-	length = float64(len(y))
+	//length = float64(len(y))
 
 	for i := 0; i < Learn.MaxIterations; i++ {
 
-		//tmpData = Tr.Data * Learn.Theta
-		//z = g(tmpData)
+		trainMat := mat.NewDense(len(Tr.Line), len(Tr.Line[0]), Tranform(Tr.Line))   //Tr.Data * Learn.Theta
+		thetaMat := mat.NewDense(len(Tr.Line[0]), len(Tr.Line), Trans(Learn.Theta, len(Tr.Line[0]), len(Tr.Line)))
+
+		fc := mat.Formatted(trainMat, mat.Prefix("    "), mat.Squeeze())
+		fmt.Printf("tr :%v\n", fc)
+		fc1 := mat.Formatted(thetaMat, mat.Prefix("    "), mat.Squeeze())
+		fmt.Printf("th :%v\n", fc1)
+		tmpMat.Mul(trainMat, thetaMat)
+		fc2 := mat.Formatted(&tmpMat, mat.Prefix("    "), mat.Squeeze())
+		fmt.Printf("fi :%v\n", fc2)
+		z := g(tmpMat)
+		fmt.Println(z)
 		//ac_cost = Learn.Cost
 		//Learn.Cost = Cost(z, length, y)
 		//if ac_cost - Learn.Cost < Learn.Stop {
@@ -100,21 +112,45 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 		//gradient = (z - y) * Tr.Data / length
 		//Learn.Theta = gradient * Learn.LearningRate
 	}
-	return (0.0)
 }
 
-func Cost(z map[int]float64, length float64, y map[int]float64) (float64) {
+func Trans(z float64, sizec, sizel int) (res []float64) {
 
-	var Sum, float64
+	for i := 0; i < sizec; i++ {
 
-	for i := 0; i < len(data) ; i++ {
+		for a := 0; a < sizel; a++ {
+			res = append(res, z)
+		}
+	}
+	return (res)
+}
+
+func Tranform(data map[int]map[int]float64) ([]float64) {
+
+	var Tab []float64
+
+	for i := 0; i < len(data); i++ {
+
+		for a := 0; a < len(data[i]); a++ {
+			Tab = append(Tab, data[i][a])
+		}
+	}
+	return (Tab)
+}
+
+/*func Cost(z map[int]float64, length float64, y map[int]float64) (float64) {
+
+	var Sum float64
+
+	for i := 0; i < len(y) ; i++ {
 
 		Sum += y[i] * math.Log(z) + (1 - y[i]) * math.Log(1 - z)
 	}
 	Sum = -1 * (Sum / length)
+	return (Sum)
 }
-
-func g(z float64) (float64) {
+*/
+func g(z mat.Dense) (mat.Dense) {
 
 	return (1 / (1 + math.Exp(-z)))
 }

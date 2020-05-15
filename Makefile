@@ -7,6 +7,7 @@ init:
 	go get -u gonum.org/v1/plot
 	go get -u gonum.org/v1/plot/vg
 	go get -u github.com/nfnt/resize
+	go get -u gonum.org/v1/gonum/mat
 
 	go build src/describe.go
 	go build src/histogram.go
