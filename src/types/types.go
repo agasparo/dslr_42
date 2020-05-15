@@ -41,7 +41,7 @@ type Learning struct {
 
 	LearningRate 	float64
 	MaxIterations	int
-	Theta0			float64
+	Theta			float64
 	Cost			float64
 	Stop			float64
 	Weights			map[int]float64

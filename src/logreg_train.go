@@ -53,12 +53,16 @@ func main() {
 
 	gradientDescent
 
-		z = matrice | data * theta
+		z = matrice | data * theta car h(x) = g(theta * x)
 		cacul du cout de la fonction
 		si le cout - l'ancien cout < stop
 			on stop l'ago
 		on calcul le nouveau theta
-			 * learning rate
+
+			gradient 
+
+			calcul
+				gradient * learning rate
 
  */
 
@@ -71,35 +75,41 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 	for i := 0; i < len(Table); i++ {
 
 		y = dataOp.RempY(Table[i], Data.School)
-		theta := gradientDescent(Tr, Learn, y)
-		Learn.Weights[len(Learn.Weights)] = theta
+		gradientDescent(Tr, Learn, y)
+		Learn.Weights[len(Learn.Weights)] = Learn.Theta
 		return
 	}
 }
 
-func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float64) (float64) {
+func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float64) {
 
 	var z map[int]float64
-	var length float64
+	var length, ac_cost float64
 
 	length = float64(len(y))
 
 	for i := 0; i < Learn.MaxIterations; i++ {
 
-		//caculer matruce * matrice
-		//z = 
-		//Cost(z, length)
+		//tmpData = Tr.Data * Learn.Theta
+		//z = g(tmpData)
+		//ac_cost = Learn.Cost
+		//Learn.Cost = Cost(z, length, y)
+		//if ac_cost - Learn.Cost < Learn.Stop {
+		//	break
+		//}
+		//gradient = (z - y) * Tr.Data / length
+		//Learn.Theta = gradient * Learn.LearningRate
 	}
 	return (0.0)
 }
 
-func Cost(z matrice, length float64) (float64) {
+func Cost(z map[int]float64, length float64, y map[int]float64) (float64) {
 
 	var Sum, float64
 
 	for i := 0; i < len(data) ; i++ {
 
-		Sum += y[i] * math.Log(g(z)) + (1 - y[i]) * log(1 - g(z))
+		Sum += y[i] * math.Log(z) + (1 - y[i]) * math.Log(1 - z)
 	}
 	Sum = -1 * (Sum / length)
 }
