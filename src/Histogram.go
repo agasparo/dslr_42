@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"images"
 	"strconv"
+	"say"
 )
 
 func main() {
@@ -88,4 +89,6 @@ func main() {
 
 	Response.Sucess("Drawing histogram on term ...")
 	images.DrawOnTerm("graphs/histogram.png")
+
+	say.Histogram()
 }
