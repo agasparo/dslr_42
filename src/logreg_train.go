@@ -60,7 +60,7 @@ func main() {
 		on calcul le nouveau theta
 
 			gradient 
-
+				(z - y) * data / length
 			calcul
 				gradient * learning rate
 
