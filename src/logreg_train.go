@@ -84,11 +84,10 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 
 func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float64) {
 
-	//var z map[int]float64
-	//var length, ac_cost float64
-	var tmpMat mat.Dense
+	var length, ac_cost float64
+	var tmpMat, z mat.Dense
 
-	//length = float64(len(y))
+	length = float64(len(y))
 
 	for i := 0; i < Learn.MaxIterations; i++ {
 
@@ -102,9 +101,9 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 		tmpMat.Mul(trainMat, thetaMat)
 		fc2 := mat.Formatted(&tmpMat, mat.Prefix("    "), mat.Squeeze())
 		fmt.Printf("fi :%v\n", fc2)
-		z := g(tmpMat)
-		fmt.Println(z)
-		//ac_cost = Learn.Cost
+		z = g(tmpMat)
+		fmt.Println(z) //ici
+		ac_cost = Learn.Cost
 		//Learn.Cost = Cost(z, length, y)
 		//if ac_cost - Learn.Cost < Learn.Stop {
 		//	break
