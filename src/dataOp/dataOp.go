@@ -192,14 +192,37 @@ func InIDs(ids []int, search int) (bool) {
 
 func FormatData(res *types.DataTrain, data types.Datas) {
 
-	res.Moy = make(map[int]float64)
+	res.Data = make(map[int]types.LineData)
+
+	Tab := [4]string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"}
 
 	for z := 0; z < len(data.Table[0].Cat); z++ {
 
-		Calc := make(map[int]float64)
+		Adds := make(map[int]float64)
 		for i := 0; i < len(data.Table); i++ {
-			Calc[i] = data.Table[i].Cat[z]
+			if math.IsNaN(data.Table[i].Cat[z]) {
+				data.Table[i].Cat[z] = maths.Median(data.Table[i].Cat)
+			}
+			Adds[i] = data.Table[i].Cat[z]
 		}
-		res.Moy[len(res.Moy)] = maths.Mean(maths.Count(Calc), Calc)
+		id := Sh(Tab, data.School[z])
+		if len(res.Data[id].Line) == 0 {
+			L1 := types.LineData{}
+			L1.Line = make(map[int]map[int]float64)
+			res.Data[id] = L1
+		}
+		res.Data[id].Line[len(res.Data[id].Line)] = Adds
 	}
+}
+
+func Sh(tab [4]string, s string) (int) {
+
+
+	for i := 0; i < len(tab); i++ {
+
+		if tab[i] == s {
+			return (i)
+		}
+	}
+	return (-1)
 }

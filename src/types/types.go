@@ -34,5 +34,19 @@ type SaveCor struct {
 
 type DataTrain struct {
 
-	Moy	map[int]float64
+	Data map[int]LineData
+}
+
+type LineData struct {
+
+	Line map[int]map[int]float64
+}
+
+type Learning struct {
+
+	LearningRate 	float64
+	MaxIterations	int
+	Theta0			float64
+	Perte			float64
+	Weights			map[int]float64
 }

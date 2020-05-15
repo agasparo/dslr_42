@@ -17,7 +17,7 @@ func main() {
 	//inputs -> moyenne des notes de chaques eleves de chaques classes
 	//	moyene >= 0.5 ok
 	//	moyenne < 0.5 pas ok
-	//	
+	//	Replace NaN data with median
 	args := os.Args[1:]
 	if len(args) != 1 {
 		Response.Print("usage : ./describe [file_name.csv]")
@@ -37,6 +37,24 @@ func main() {
 	norm.NormalizeAllData(&Data)
 	Train_Data := types.DataTrain{}
 	dataOp.FormatData(&Train_Data, Data)
-	fmt.Println(Train_Data)
+	Learn := types.Learning{0.0, 1, 0.0, 0.0, make(map[int]float64)}
+	fmt.Println(Learn)
+	Train(Train_Data, &Learn)
+	fmt.Println(Learn)
 }
 
+func Train(Tr types.DataTrain, Learn *types.Learning) {
+
+	for i := 0; i < len(Tr.Data); i++ {
+
+		theta := GradientDescent(Tr, Learn)
+		Learn.Weights[len(Learn.Weights)] = theta
+	}
+}
+
+
+
+func GradientDescent(Tr types.DataTrain, Learn *types.Learning) (float64) {
+
+	return (0.0)
+}

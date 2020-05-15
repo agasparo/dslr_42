@@ -63,6 +63,17 @@ func Std(m float64, c float64, data map[int]float64) (float64) {
 	return (sd)
 }
 
+func Median(data map[int]float64) (float64) {
+
+	SortTable := MaptoSlice(data)
+	sort.Float64s(SortTable)
+	index := int(Count(data) * 0.50) - 1
+	if index < 0 {
+		index = 0
+	}
+	return (SortTable[index])
+}
+
 func Percentile(c float64, divi int, data map[int]float64) (float64) {
 
 	SortTable := MaptoSlice(data)
