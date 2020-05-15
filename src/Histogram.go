@@ -10,6 +10,8 @@ import (
 	"dataOp"
 	"graph"
 	"fmt"
+	"images"
+	"strconv"
 )
 
 func main() {
@@ -50,7 +52,6 @@ func main() {
 	dataOp.GetMat(Data.Categ, Data.Mat)
 	GraphV := dataOp.Calc(Data)
 	Tab := [4]string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"}
-	z := 0
 	if verbose == true {
 		Response.PrintVerboseStep("[3/3] Calcul value and draw graph ...")
 		
@@ -62,8 +63,23 @@ func main() {
 		
 		Response.PrintVerbose(str)
 	}
+	z := 0
 	for i := 0; i < len(GraphV.Table); i += 4 {
 		graph.DrawOne(GraphV, Tab, Data.Mat[z], i, verbose)
 		z++
 	}
+	for a := 0; a < 13; a++ {
+
+		if a % 2 == 0 && a != len(Data.Mat) - 1 {
+			images.Append("graphs/test" + strconv.Itoa(a) + ".png", "graphs/" + Data.Mat[a] + ".png", "graphs/" + Data.Mat[a + 1] + ".png")
+		}
+	}
+	
+	images.Append("graphs/test3.png", "graphs/test0.png", "graphs/test2.png")
+	images.Append("graphs/test1.png", "graphs/test4.png", "graphs/test6.png")
+	images.Append("graphs/test2.png", "graphs/test8.png", "graphs/test10.png")
+
+	images.AppendRow("graphs/test0.png", "graphs/test3.png", "graphs/test1.png")
+	images.AppendRow("graphs/test3.png", "graphs/test2.png", "graphs/test0.png")
+	images.AppendRow("graphs/histogram.png", "graphs/" + Data.Mat[len(Data.Mat) - 1] + ".png", "graphs/test3.png")
 }

@@ -85,7 +85,7 @@ func DrawOne(Data types.GraphHisto, Sc [4]string, mat string, g int, verbose boo
 		})
 	}
 	DrawHisto(All, mat)
-	images.Resize("graphs/" + mat + ".png")
+	images.Resize("graphs/" + mat + ".png", 0.5)
 }
 
 func DrawHisto(All []chart.Series, mat string) {
