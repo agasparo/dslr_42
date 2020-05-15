@@ -192,9 +192,7 @@ func InIDs(ids []int, search int) (bool) {
 
 func FormatData(res *types.DataTrain, data types.Datas) {
 
-	res.Data = make(map[int]types.LineData)
-
-	Tab := [4]string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"}
+	res.Line = make(map[int]map[int]float64)
 
 	for z := 0; z < len(data.Table[0].Cat); z++ {
 
@@ -205,24 +203,21 @@ func FormatData(res *types.DataTrain, data types.Datas) {
 			}
 			Adds[i] = data.Table[i].Cat[z]
 		}
-		id := Sh(Tab, data.School[z])
-		if len(res.Data[id].Line) == 0 {
-			L1 := types.LineData{}
-			L1.Line = make(map[int]map[int]float64)
-			res.Data[id] = L1
-		}
-		res.Data[id].Line[len(res.Data[id].Line)] = Adds
+		res.Line[len(res.Line)] = Adds
 	}
 }
 
-func Sh(tab [4]string, s string) (int) {
+func RempY(sc string, data map[int]string) (map[int]float64) {
 
+	res := make(map[int]float64)
 
-	for i := 0; i < len(tab); i++ {
+	for i := 0; i < len(data); i++ {
 
-		if tab[i] == s {
-			return (i)
+		if sc == data[i] {
+			res[len(res)] = 1
+		} else {
+			res[len(res)] = 0
 		}
-	}
-	return (-1)
+	} 
+	return (res)
 }
