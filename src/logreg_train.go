@@ -37,7 +37,7 @@ func main() {
 	norm.NormalizeAllData(&Data)
 	Train_Data := types.DataTrain{}
 	dataOp.FormatData(&Train_Data, Data)
-	Learn := types.Learning{0.0, 1, 0.0, 0.0, make(map[int]float64)}
+	Learn := types.Learning{ 0.3, 1, 0.0, 0.0, make(map[int]float64) }
 	fmt.Println(Learn)
 	Train(Train_Data, &Learn)
 	fmt.Println(Learn)
@@ -47,14 +47,19 @@ func Train(Tr types.DataTrain, Learn *types.Learning) {
 
 	for i := 0; i < len(Tr.Data); i++ {
 
-		theta := GradientDescent(Tr, Learn)
+		theta := GradientDescent(Tr, Learn, i)
 		Learn.Weights[len(Learn.Weights)] = theta
 	}
 }
 
 
 
-func GradientDescent(Tr types.DataTrain, Learn *types.Learning) (float64) {
+func GradientDescent(Tr types.DataTrain, Learn *types.Learning, index int) (float64) {
 
+	length := len(Tr.Data[index].Line)
+
+	for i := 0; i < Learn.MaxIterations; i++ {
+
+	}
 	return (0.0)
 }
