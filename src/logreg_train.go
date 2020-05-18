@@ -85,8 +85,9 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float64) {
 
 	var length, ac_cost float64
-	var tmpMat, gradient mat.Dense
+	var tmpMat, gradient, v, temp mat.Dense
 	var z *mat.Dense
+	var size_l, size_c int
 
 	length = float64(len(y))
 
@@ -99,13 +100,19 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 		z = g(tmpMat)
 		ac_cost = Learn.Cost
 		Learn.Cost = Cost(z, length, y)
+		
 		if ac_cost - Learn.Cost < Learn.Stop {
 			break
 		}
-		gradient.Sub(z, MaptoMat(y))
-		//gradient.Mul(&gradient, trainMat)
-		//gradient.Divi(&gradient, size)
-		//(z - y) * Tr.Data / length
+		
+		temp.Sub(z, MaptoMat(y))
+		ngradient := Rotate(&temp)
+		v.Mul(ngradient, trainMat)
+		
+		size_l = v.RawMatrix().Rows
+		size_c = v.RawMatrix().Cols
+		size := mat.NewDense(size_l, size_c, Trans(length, size_l, size_c))
+		gradient.DivElem(&v, size)
 		//Learn.Theta = gradient * Learn.LearningRate
 		fmt.Println(gradient)
 	}
@@ -145,6 +152,17 @@ func g(z mat.Dense) (*mat.Dense) {
 	final := mat.NewDense(1, size_l, Trans(data, size_l, 1))
 
 	return (final)
+}
+
+func Rotate(matrice *mat.Dense) (*mat.Dense) {
+
+	var size_l, size_c int
+
+	data := matrice.RawRowView(0)
+	size_l = matrice.RawMatrix().Rows
+	size_c = matrice.RawMatrix().Cols
+	matf := mat.NewDense(size_l, size_c, data)
+	return (matf)
 }
 
 func MaptoMat(y map[int]float64) (*mat.Dense) {
