@@ -104,7 +104,7 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 		if ac_cost - Learn.Cost < Learn.Stop {
 			break
 		}
-		
+
 		temp.Sub(z, MaptoMat(y))
 		ngradient := Rotate(&temp)
 		v.Mul(ngradient, trainMat)
