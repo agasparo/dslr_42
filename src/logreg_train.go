@@ -9,7 +9,7 @@ import (
 	"dataOp"
 	"fmt"
 	"norm"
-	//"math"
+	"math"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -85,32 +85,69 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float64) {
 
 	var length, ac_cost float64
-	var tmpMat, z mat.Dense
+	var tmpMat, gradient mat.Dense
+	var z *mat.Dense
 
 	length = float64(len(y))
 
 	for i := 0; i < Learn.MaxIterations; i++ {
 
-		trainMat := mat.NewDense(len(Tr.Line), len(Tr.Line[0]), Tranform(Tr.Line))   //Tr.Data * Learn.Theta
+		trainMat := mat.NewDense(len(Tr.Line), len(Tr.Line[0]), Tranform(Tr.Line))
 		thetaMat := mat.NewDense(len(Tr.Line[0]), len(Tr.Line), Trans(Learn.Theta, len(Tr.Line[0]), len(Tr.Line)))
 
-		fc := mat.Formatted(trainMat, mat.Prefix("    "), mat.Squeeze())
-		fmt.Printf("tr :%v\n", fc)
-		fc1 := mat.Formatted(thetaMat, mat.Prefix("    "), mat.Squeeze())
-		fmt.Printf("th :%v\n", fc1)
 		tmpMat.Mul(trainMat, thetaMat)
-		fc2 := mat.Formatted(&tmpMat, mat.Prefix("    "), mat.Squeeze())
-		fmt.Printf("fi :%v\n", fc2)
 		z = g(tmpMat)
-		fmt.Println(z) //ici
 		ac_cost = Learn.Cost
-		//Learn.Cost = Cost(z, length, y)
-		//if ac_cost - Learn.Cost < Learn.Stop {
-		//	break
-		//}
-		//gradient = (z - y) * Tr.Data / length
+		Learn.Cost = Cost(z, length, y)
+		if ac_cost - Learn.Cost < Learn.Stop {
+			break
+		}
+		gradient.Sub(z, y)
+		//gradient.Mul(gradient, trainMat)
+		//gradient.Divi(gradient, size)
+		//(z - y) * Tr.Data / length
 		//Learn.Theta = gradient * Learn.LearningRate
 	}
+}
+
+func Cost(z *mat.Dense, length float64, y map[int]float64) (float64) {
+
+	var Sum float64
+
+	data := z.At(0, 1)
+
+	for i := 0; i < len(y) ; i++ {
+
+		Sum += y[i] * math.Log(data) + (1 - y[i]) * math.Log(1 - data)
+	}
+	Sum = -1 * (Sum / length)
+	return (Sum)
+}
+
+func g(z mat.Dense) (*mat.Dense) {
+
+	var e, i, a, d mat.Dense
+	var size_l, size_c int
+
+	size_l = z.RawMatrix().Rows
+	size_c = z.RawMatrix().Cols
+
+	inv := mat.NewDense(size_c, size_l, Trans(-1, size_l, size_c))
+	add := mat.NewDense(size_c, size_l, Trans(1, size_l, size_c))
+
+	i.Mul(&z, inv)
+	e.Exp(&i)
+	a.Add(add, &e)
+	d.DivElem(add, &a)
+
+	data := d.At(1, 1)
+	final := mat.NewDense(1, size_l, Trans(data, size_l, 1))
+
+	return (final)
+}
+
+func MaptoMat() () {
+	
 }
 
 func Trans(z float64, sizec, sizel int) (res []float64) {
@@ -135,21 +172,4 @@ func Tranform(data map[int]map[int]float64) ([]float64) {
 		}
 	}
 	return (Tab)
-}
-
-/*func Cost(z map[int]float64, length float64, y map[int]float64) (float64) {
-
-	var Sum float64
-
-	for i := 0; i < len(y) ; i++ {
-
-		Sum += y[i] * math.Log(z) + (1 - y[i]) * math.Log(1 - z)
-	}
-	Sum = -1 * (Sum / length)
-	return (Sum)
-}
-*/
-func g(z mat.Dense) (mat.Dense) {
-
-	return (1 / (1 + math.Exp(-z)))
 }
