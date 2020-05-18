@@ -62,7 +62,8 @@ func main() {
 	norm.NormalizeAllData(&Data)
 	Train_Data := types.DataTrain{}
 	dataOp.FormatData(&Train_Data, Data)
-	Learn := types.Learning{ 0.3, 1, 0.0, 1.0, 0.000001, make(map[int]float64) } // pour iteration apres 100000
+	theta := mat.NewDense(len(Train_Data.Line[0]), len(Train_Data.Line), Trans(0.0, len(Train_Data.Line[0]), len(Train_Data.Line)))
+	Learn := types.Learning{ 0.3, 1, theta, 1.0, 0.000001, make(map[int]float64) } // pour iteration apres 100000
 	Train(Train_Data, &Learn, Data)
 	fmt.Println(Learn)
 }
@@ -77,7 +78,7 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 
 		y = dataOp.RempY(Table[i], Data.School)
 		gradientDescent(Tr, Learn, y)
-		Learn.Weights[len(Learn.Weights)] = Learn.Theta
+		//Learn.Weights[len(Learn.Weights)] = Learn.Theta
 		return
 	}
 }
@@ -85,7 +86,7 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float64) {
 
 	var length, ac_cost float64
-	var tmpMat, gradient, v, temp mat.Dense
+	var tmpMat, gradient, v, temp, Lr mat.Dense
 	var z *mat.Dense
 	var size_l, size_c int
 
@@ -94,7 +95,7 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 	for i := 0; i < Learn.MaxIterations; i++ {
 
 		trainMat := mat.NewDense(len(Tr.Line), len(Tr.Line[0]), Tranform(Tr.Line))
-		thetaMat := mat.NewDense(len(Tr.Line[0]), len(Tr.Line), Trans(Learn.Theta, len(Tr.Line[0]), len(Tr.Line)))
+		thetaMat := Learn.Theta
 
 		tmpMat.Mul(trainMat, thetaMat)
 		z = g(tmpMat)
@@ -113,8 +114,13 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 		size_c = v.RawMatrix().Cols
 		size := mat.NewDense(size_l, size_c, Trans(length, size_l, size_c))
 		gradient.DivElem(&v, size)
-		//Learn.Theta = gradient * Learn.LearningRate
-		fmt.Println(gradient)
+
+		size_l = gradient.RawMatrix().Rows
+		size_c = gradient.RawMatrix().Cols
+		tmplr := mat.NewDense(size_c, size_l, Trans(Learn.LearningRate, size_c, size_l))
+		Lr.Mul(tmplr, &gradient)
+		Learn.Theta = Modifi(Lr)
+		//fmt.Println(Learn.Theta)
 	}
 }
 
@@ -152,6 +158,23 @@ func g(z mat.Dense) (*mat.Dense) {
 	final := mat.NewDense(1, size_l, Trans(data, size_l, 1))
 
 	return (final)
+}
+
+func Modifi(matrice mat.Dense) (*mat.Dense) {
+
+	var size_l int
+	var data []float64
+
+	for i := 0; i < 7; i++ {
+
+		tmp := matrice.RawRowView(i)
+		for a := 0; a < len(tmp); a++ {
+			data = append(data, tmp[a])
+		}
+	}
+	size_l = matrice.RawMatrix().Rows
+	matf := mat.NewDense(size_l, 7, data)
+	return (matf)
 }
 
 func Rotate(matrice *mat.Dense) (*mat.Dense) {

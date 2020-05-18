@@ -1,7 +1,7 @@
 package types
 
 import (
-
+	"gonum.org/v1/gonum/mat"
 )
 
 type Datas struct {
@@ -41,7 +41,7 @@ type Learning struct {
 
 	LearningRate 	float64
 	MaxIterations	int
-	Theta			float64
+	Theta			*mat.Dense
 	Cost			float64
 	Stop			float64
 	Weights			map[int]float64
