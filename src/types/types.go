@@ -44,5 +44,5 @@ type Learning struct {
 	Theta			*mat.Dense
 	Cost			float64
 	Stop			float64
-	Weights			map[int]float64
+	Weights			map[int]*mat.Dense
 }

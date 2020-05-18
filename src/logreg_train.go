@@ -63,9 +63,9 @@ func main() {
 	Train_Data := types.DataTrain{}
 	dataOp.FormatData(&Train_Data, Data)
 	theta := mat.NewDense(len(Train_Data.Line[0]), len(Train_Data.Line), Trans(0.0, len(Train_Data.Line[0]), len(Train_Data.Line)))
-	Learn := types.Learning{ 0.3, 1, theta, 1.0, 0.000001, make(map[int]float64) } // pour iteration apres 100000
+	Learn := types.Learning{ 0.3, 1, theta, 1.0, 0.000001, make(map[int]*mat.Dense) } // pour iteration apres 100000
 	Train(Train_Data, &Learn, Data)
-	fmt.Println(Learn)
+	fmt.Println(Learn.Weights)
 }
 
 func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
@@ -78,7 +78,7 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 
 		y = dataOp.RempY(Table[i], Data.School)
 		gradientDescent(Tr, Learn, y)
-		//Learn.Weights[len(Learn.Weights)] = Learn.Theta
+		Learn.Weights[len(Learn.Weights)] = Learn.Theta
 		return
 	}
 }
@@ -120,7 +120,6 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 		tmplr := mat.NewDense(size_c, size_l, Trans(Learn.LearningRate, size_c, size_l))
 		Lr.Mul(tmplr, &gradient)
 		Learn.Theta = Modifi(Lr)
-		//fmt.Println(Learn.Theta)
 	}
 }
 
