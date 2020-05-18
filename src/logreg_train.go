@@ -102,11 +102,12 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 		if ac_cost - Learn.Cost < Learn.Stop {
 			break
 		}
-		gradient.Sub(z, y)
-		//gradient.Mul(gradient, trainMat)
-		//gradient.Divi(gradient, size)
+		gradient.Sub(z, MaptoMat(y))
+		//gradient.Mul(&gradient, trainMat)
+		//gradient.Divi(&gradient, size)
 		//(z - y) * Tr.Data / length
 		//Learn.Theta = gradient * Learn.LearningRate
+		fmt.Println(gradient)
 	}
 }
 
@@ -146,8 +147,17 @@ func g(z mat.Dense) (*mat.Dense) {
 	return (final)
 }
 
-func MaptoMat() () {
-	
+func MaptoMat(y map[int]float64) (*mat.Dense) {
+
+	var matrice *mat.Dense
+	var tmp []float64
+
+	for i := 0; i < len(y); i++ {
+		tmp = append(tmp, y[i])
+	}
+
+	matrice = mat.NewDense(1, len(tmp), tmp)
+	return (matrice)
 }
 
 func Trans(z float64, sizec, sizel int) (res []float64) {
