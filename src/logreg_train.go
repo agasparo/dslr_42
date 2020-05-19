@@ -133,13 +133,26 @@ func VecToMat(vec mat.VecDense, x, y int) (*mat.Dense) {
 
 func Cost(z mat.VecDense, length float64, y map[int]float64) (float64) {
 
+	var Sum, zLog float64
+
+	zLog = LogVector(z)
+	i := 0
+	//for i := 0; i < len(y) ; i++ {
+
+		Sum += y[i] * math.Log(zLog) + (1 - y[i]) * math.Log(1 - zLog)
+	//}
+	//Sum = -1 * (Sum / length)
+	return (Sum)
+}
+
+func LogVector(vec mat.VecDense) (float64) {
+
 	var Sum float64
 
-	for i := 0; i < len(y) ; i++ {
-
-		Sum += y[i] * math.Log(z) + (1 - y[i]) * math.Log(1 - z)
+	data := vec.RawVector().Data
+	for i := 0; i < len(data); i++ {
+		Sum += data[i]
 	}
-	Sum = -1 * (Sum / length)
 	return (Sum)
 }
 
