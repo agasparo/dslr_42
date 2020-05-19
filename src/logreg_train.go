@@ -114,10 +114,10 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 		sub.SubVec(&z, MaptoVec(y))
 		mul.Mul(VecToMat(sub, 1, 1600), Learn.Datas)
 		divi.DivElem(&mul, length_mat)
-		fmt.Println(Mat2Vec(divi, 10))
-		fmt.Println(Learn.LearningRate)
-		tmpTheta.MulVec(Mat2Vec(divi, 10), Learn.LearningRate)
-		//Learn.Theta. soustraction de vecteur
+		tmpTheta.MulVec(&divi, Learn.LearningRate)
+		fmt.Println(Learn.Theta)
+		fmt.Println(&tmpTheta)
+		Learn.Theta.SubVec(Learn.Theta, &tmpTheta)
 	}
 }
 
