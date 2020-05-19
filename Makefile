@@ -13,11 +13,13 @@ init:
 	go build src/histogram.go
 	go build src/scatter_plot.go
 	go build src/pair_plot.go
+	go build src/logreg_train.go
 
 clean: 
 	rm $(P1)
 	rm $(P2)
 	rm $(P3)
 	rm $(P4)
+	rm $(P5)
 
 all: init
