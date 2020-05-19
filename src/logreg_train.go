@@ -64,7 +64,7 @@ func main() {
 	dataOp.FormatData(&Train_Data, Data)
 	theta := mat.NewVecDense(10, Trans(0.0, 10, 1))
 	trainMat := mat.NewDense(len(Train_Data.Line), len(Train_Data.Line[0]), Tranform(Train_Data.Line))
-	Learn := types.Learning{ mat.NewVecDense(10, Trans(0.1, 10, 1)), 1, theta, 1.0, 0.000001, make(map[int][]float64), trainMat } // pour iteration apres 100000
+	Learn := types.Learning{ 0.1, 4, theta, 1.0, 0.000001, make(map[int][]float64), trainMat } // pour iteration apres 100000
 	Train(Train_Data, &Learn, Data)
 }
 
@@ -86,7 +86,7 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float64) {
 
 	var length, ac_cost float64
-	var vec, z, sub, tmpTheta mat.VecDense
+	var vec, z, sub mat.VecDense
 	var mul, divi mat.Dense
 
 	length = float64(len(y))
@@ -99,7 +99,6 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 
 		vec.MulVec(Learn.Datas, Learn.Theta)
 		z = g(vec)
-		fmt.Println(z)
 		ac_cost = Learn.Cost
 		Learn.Cost = Cost(z.At(0, 0), length, y)
 		
@@ -114,16 +113,17 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 		sub.SubVec(&z, MaptoVec(y))
 		mul.Mul(VecToMat(sub, 1, 1600), Learn.Datas)
 		divi.DivElem(&mul, length_mat)
-		tmpTheta.MulVec(&divi, Learn.LearningRate)
+		Learn.Theta = mat.NewVecDense(10, GetGrad(divi.RawMatrix().Data, Learn.LearningRate, Learn.Theta.RawVector().Data))
 		fmt.Println(Learn.Theta)
-		fmt.Println(&tmpTheta)
-		Learn.Theta.SubVec(Learn.Theta, &tmpTheta)
 	}
 }
 
-func Mat2Vec(matrice mat.Dense, x int) (*mat.VecDense) {
+func GetGrad(data []float64, rate float64, sub []float64) ([]float64) {
 
-	return (mat.NewVecDense(x, matrice.RawMatrix().Data))
+	for i := 0; i < len(data); i++ {
+		data[i] = sub[i] - (rate * data[i])
+	}
+	return (data)
 }
 
 func VecToMat(vec mat.VecDense, x, y int) (*mat.Dense) {
