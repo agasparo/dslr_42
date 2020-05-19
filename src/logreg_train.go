@@ -13,34 +13,6 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-/*
-	y tab de 0 et de 1
-		pour nous 0 ou 1 cest ecole ou pas ecole
-
-	cost function
-
-		si y = 1 cost : -log(h(x))
-		si y = 0 cost : -log(1 - h(x))
-
-		value : Cost(h(x), y) = y  * log(h(x)) + (1 - y) * log(1 - h(x))
-		h(x) = g(theta * x)
-		g(x) = 1 / (1 - e(-x))
-
-	gradientDescent
-
-		z = matrice | data * theta car h(x) = g(theta * x)
-		cacul du cout de la fonction
-		si le cout - l'ancien cout < stop
-			on stop l'ago
-		on calcul le nouveau theta
-
-			gradient 
-				(z - y) * data / length
-			calcul
-				gradient * learning rate
-
- */
-
 func main() {
 
 	args := os.Args[1:]
@@ -62,9 +34,9 @@ func main() {
 	norm.NormalizeAllData(&Data)
 	Train_Data := types.DataTrain{}
 	dataOp.FormatData(&Train_Data, Data)
-	theta := mat.NewVecDense(10, Trans(0.0, 10, 1))
+	theta := mat.NewVecDense(11, Trans(0.0, 11, 1))
 	trainMat := mat.NewDense(len(Train_Data.Line), len(Train_Data.Line[0]), Tranform(Train_Data.Line))
-	Learn := types.Learning{ 0.1, 1, theta, 1.0, 0.000001, make(map[int][]float64), trainMat } // pour iteration apres 100000
+	Learn := types.Learning{ 0.1, 3, theta, 1.0, 0.000001, make(map[int][]float64), trainMat } // pour iteration apres 110000
 	Train(Train_Data, &Learn, Data)
 }
 
@@ -79,6 +51,7 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 		y = dataOp.RempY(Table[i], Data.School)
 		gradientDescent(Tr, Learn, y)
 		Learn.Weights[len(Learn.Weights)] = Learn.Theta.RawVector().Data
+		fmt.Println(Learn.Weights)
 		return
 	}
 }
@@ -90,7 +63,7 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 	var mul, divi mat.Dense
 
 	length = float64(len(y))
-	length_mat := mat.NewDense(1, 10, Trans(length, 1, 10))
+	length_mat := mat.NewDense(1, 11, Trans(length, 1, 11))
 
 	for i := 0; i < Learn.MaxIterations; i++ {
 
@@ -102,26 +75,24 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 		ac_cost = Learn.Cost
 		Learn.Cost = Cost(z, length, y)
 		
-		fmt.Printf("ac_cost : %f\n", ac_cost)
-		fmt.Printf("Learn.Cost : %f\n", Learn.Cost)
-		fmt.Printf("Learn.Stop : %f\n", Learn.Stop)
+		fmt.Printf("cost : %f\n", Learn.Cost)
 		if ac_cost - Learn.Cost < Learn.Stop {
 			fmt.Println("la")
 			break
 		}
 
-		sub.SubVec(&z, MaptoVec(y))
+		sub.SubVec(&z, MaptoVec(y, 0))
 		mul.Mul(VecToMat(sub, 1, 1600), Learn.Datas)
 		divi.DivElem(&mul, length_mat)
-		Learn.Theta = mat.NewVecDense(10, GetGrad(divi.RawMatrix().Data, Learn.LearningRate, Learn.Theta.RawVector().Data))
-		fmt.Println(Learn.Theta)
+		grad := mat.NewVecDense(11, GetGrad(divi.RawMatrix().Data, Learn.LearningRate))
+		Learn.Theta.SubVec(Learn.Theta, grad)
 	}
 }
 
-func GetGrad(data []float64, rate float64, sub []float64) ([]float64) {
+func GetGrad(data []float64, rate float64) ([]float64) {
 
 	for i := 0; i < len(data); i++ {
-		data[i] = sub[i] - (rate * data[i])
+		data[i] = rate * data[i]
 	}
 	return (data)
 }
@@ -134,25 +105,43 @@ func VecToMat(vec mat.VecDense, x, y int) (*mat.Dense) {
 func Cost(z mat.VecDense, length float64, y map[int]float64) (float64) {
 
 	var Sum float64
+	var res, res1, res2 mat.VecDense
 
-	z = LogVector(z)
-	z1 := (1 - z)
-	//i := 0
-	//for i := 0; i < len(y) ; i++ {
+	z0 := mat.NewVecDense(1600, LogVector(z, 0))
+	z1 := mat.NewVecDense(1600, LogVector(z, 1))
+	y1 := MaptoVec(y, 0)
+	y2 := MaptoVec(y, 1)
 
-		//Sum += y[i] * math.Log(zLog) + (1 - y[i]) * math.Log(z1Log)
-	//}
-	//Sum = -1 * (Sum / length)
+	res.MulElemVec(y1, z0)
+	res1.MulElemVec(y2, z1)
+	res2.AddVec(&res, &res1)
+	Sum = Summ(res2)
+	Sum = Sum / -length
 	return (Sum)
 }
 
-func LogVector(vec mat.VecDense) (mat.VecDense) {
+func Summ(vec mat.VecDense) (S float64) {
 
 	data := vec.RawVector().Data
 	for i := 0; i < len(data); i++ {
-		vec.SetVec(i, math.Log(data[i]))
+		S += data[i]
 	}
-	return (vec)
+	return (S)
+}
+
+func LogVector(vec mat.VecDense, add int) ([]float64) {
+
+	var tab []float64
+
+	data := vec.RawVector().Data
+	for i := 0; i < len(data); i++ {
+		if add == 0 {
+			tab = append(tab, math.Log(data[i]))
+		} else {
+			tab = append(tab, math.Log(1 - data[i]))
+		}
+	}
+	return (tab)
 }
 
 func g(z mat.VecDense) (mat.VecDense) {
@@ -172,13 +161,17 @@ func gtab(data []float64) ([]float64) {
 	return (data)
 }
 
-func MaptoVec(y map[int]float64) (*mat.VecDense) {
+func MaptoVec(y map[int]float64, add int) (*mat.VecDense) {
 
 	var vector *mat.VecDense
 	var tmp []float64
 
 	for i := 0; i < len(y); i++ {
-		tmp = append(tmp, y[i])
+		if add == 0 {
+			tmp = append(tmp, y[i])
+		} else {
+			tmp = append(tmp, 1.0 - y[i])
+		}
 	}
 
 	vector = mat.NewVecDense(1600, tmp)

@@ -132,7 +132,6 @@ func FormateData(data string, sc string) ([]string) {
 
 	var tab []string
 
-
 	e := strings.Split(data, ",")
 	for i := 0; i < len(e) - 1; i++ {
 		tab = append(tab, e[i])
@@ -199,11 +198,12 @@ func FormatData(res *types.DataTrain, data types.Datas) {
 	for z := 0; z < len(data.Table[0].Cat); z++ {
 
 		Adds := make(map[int]float64)
+		Adds[0] = 1.0
 		for i := 0; i < len(data.Table); i++ {
 			if math.IsNaN(data.Table[i].Cat[z]) {
 				data.Table[i].Cat[z] = maths.Median(data.Table[i].Cat)
 			}
-			Adds[i] = data.Table[i].Cat[z]
+			Adds[i + 1] = data.Table[i].Cat[z]
 		}
 		res.Line[len(res.Line)] = Adds
 	}
