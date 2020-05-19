@@ -36,7 +36,7 @@ func main() {
 	dataOp.FormatData(&Train_Data, Data)
 	theta := mat.NewVecDense(11, Trans(0.0, 11, 1))
 	trainMat := mat.NewDense(len(Train_Data.Line), len(Train_Data.Line[0]), Tranform(Train_Data.Line))
-	Learn := types.Learning{ 0.1, 3, theta, 1.0, 0.000001, make(map[int][]float64), trainMat } // pour iteration apres 110000
+	Learn := types.Learning{ 0.1, 100000, theta, 1.0, 0.000001, make(map[int][]float64), trainMat } // pour iteration apres 110000
 	Train(Train_Data, &Learn, Data)
 }
 
@@ -67,17 +67,12 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 
 	for i := 0; i < Learn.MaxIterations; i++ {
 
-		fmt.Println("--------------------------------------------------------")
-		fmt.Printf("turn : %d\n", i)
-
 		vec.MulVec(Learn.Datas, Learn.Theta)
 		z = g(vec)
 		ac_cost = Learn.Cost
 		Learn.Cost = Cost(z, length, y)
 		
-		fmt.Printf("cost : %f\n", Learn.Cost)
 		if ac_cost - Learn.Cost < Learn.Stop {
-			fmt.Println("la")
 			break
 		}
 
