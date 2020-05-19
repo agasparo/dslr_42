@@ -52,7 +52,6 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 		gradientDescent(Tr, Learn, y)
 		Learn.Weights[len(Learn.Weights)] = Learn.Theta.RawVector().Data
 		fmt.Println(Learn.Weights)
-		return
 	}
 }
 
