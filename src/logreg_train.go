@@ -64,7 +64,7 @@ func main() {
 	dataOp.FormatData(&Train_Data, Data)
 	theta := mat.NewVecDense(10, Trans(0.0, 10, 1))
 	trainMat := mat.NewDense(len(Train_Data.Line), len(Train_Data.Line[0]), Tranform(Train_Data.Line))
-	Learn := types.Learning{ 0.1, 4, theta, 1.0, 0.000001, make(map[int][]float64), trainMat } // pour iteration apres 100000
+	Learn := types.Learning{ 0.1, 1, theta, 1.0, 0.000001, make(map[int][]float64), trainMat } // pour iteration apres 100000
 	Train(Train_Data, &Learn, Data)
 }
 
@@ -78,7 +78,7 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 
 		y = dataOp.RempY(Table[i], Data.School)
 		gradientDescent(Tr, Learn, y)
-		//Learn.Weights[len(Learn.Weights)] = Learn.Theta.RawRowView(0)
+		Learn.Weights[len(Learn.Weights)] = Learn.Theta.RawVector().Data
 		return
 	}
 }
@@ -100,7 +100,7 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 		vec.MulVec(Learn.Datas, Learn.Theta)
 		z = g(vec)
 		ac_cost = Learn.Cost
-		Learn.Cost = Cost(z.At(0, 0), length, y)
+		Learn.Cost = Cost(z, length, y)
 		
 		fmt.Printf("ac_cost : %f\n", ac_cost)
 		fmt.Printf("Learn.Cost : %f\n", Learn.Cost)
@@ -131,7 +131,7 @@ func VecToMat(vec mat.VecDense, x, y int) (*mat.Dense) {
 	return (mat.NewDense(x, y, vec.RawVector().Data))
 }
 
-func Cost(z float64, length float64, y map[int]float64) (float64) {
+func Cost(z mat.VecDense, length float64, y map[int]float64) (float64) {
 
 	var Sum float64
 
