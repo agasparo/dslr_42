@@ -12,6 +12,10 @@ import (
 	"math"
 )
 
+func SaveFile(data map[int][]float64, name string) {
+
+}
+
 func ReadFile(Dat *types.Datas, File string, t int) (int) {
 
 	csvfile, err := os.Open(File)

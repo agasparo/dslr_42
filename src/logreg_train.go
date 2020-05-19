@@ -51,8 +51,8 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 		y = dataOp.RempY(Table[i], Data.School)
 		gradientDescent(Tr, Learn, y)
 		Learn.Weights[len(Learn.Weights)] = Learn.Theta.RawVector().Data
-		fmt.Println(Learn.Weights)
 	}
+	file.SaveFile(Learn.Weights, "datasets/weights.csv")
 }
 
 func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float64) {
