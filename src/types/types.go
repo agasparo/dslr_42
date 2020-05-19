@@ -39,10 +39,11 @@ type DataTrain struct {
 
 type Learning struct {
 
-	LearningRate 	float64
+	LearningRate 	*mat.VecDense
 	MaxIterations	int
-	Theta			*mat.Dense
+	Theta			*mat.VecDense
 	Cost			float64
 	Stop			float64
 	Weights			map[int][]float64
+	Datas 			*mat.Dense
 }

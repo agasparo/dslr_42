@@ -62,10 +62,10 @@ func main() {
 	norm.NormalizeAllData(&Data)
 	Train_Data := types.DataTrain{}
 	dataOp.FormatData(&Train_Data, Data)
-	theta := mat.NewDense(len(Train_Data.Line[0]), len(Train_Data.Line), Trans(0.0, len(Train_Data.Line[0]), len(Train_Data.Line)))
-	Learn := types.Learning{ 0.3, 1, theta, 1.0, 0.000001, make(map[int][]float64) } // pour iteration apres 100000
+	theta := mat.NewVecDense(10, Trans(0.0, 10, 1))
+	trainMat := mat.NewDense(len(Train_Data.Line), len(Train_Data.Line[0]), Tranform(Train_Data.Line))
+	Learn := types.Learning{ mat.NewVecDense(10, Trans(0.1, 10, 1)), 1, theta, 1.0, 0.000001, make(map[int][]float64), trainMat } // pour iteration apres 100000
 	Train(Train_Data, &Learn, Data)
-	fmt.Println(Learn.Weights)
 }
 
 func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
@@ -86,118 +86,91 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float64) {
 
 	var length, ac_cost float64
-	var tmpMat, gradient, v, temp, Lr mat.Dense
-	var z *mat.Dense
-	var size_l, size_c int
+	var vec, z, sub, tmpTheta mat.VecDense
+	var mul, divi mat.Dense
 
 	length = float64(len(y))
+	length_mat := mat.NewDense(1, 10, Trans(length, 1, 10))
 
 	for i := 0; i < Learn.MaxIterations; i++ {
 
-		trainMat := mat.NewDense(len(Tr.Line), len(Tr.Line[0]), Tranform(Tr.Line))
-		thetaMat := Learn.Theta
+		fmt.Println("--------------------------------------------------------")
+		fmt.Printf("turn : %d\n", i)
 
-		tmpMat.Mul(trainMat, thetaMat)
-		z = g(tmpMat)
+		vec.MulVec(Learn.Datas, Learn.Theta)
+		z = g(vec)
+		fmt.Println(z)
 		ac_cost = Learn.Cost
-		Learn.Cost = Cost(z, length, y)
+		Learn.Cost = Cost(z.At(0, 0), length, y)
 		
+		fmt.Printf("ac_cost : %f\n", ac_cost)
+		fmt.Printf("Learn.Cost : %f\n", Learn.Cost)
+		fmt.Printf("Learn.Stop : %f\n", Learn.Stop)
 		if ac_cost - Learn.Cost < Learn.Stop {
+			fmt.Println("la")
 			break
 		}
 
-		temp.Sub(z, MaptoMat(y))
-		ngradient := Rotate(&temp)
-		v.Mul(ngradient, trainMat)
-		
-		size_l = v.RawMatrix().Rows
-		size_c = v.RawMatrix().Cols
-		size := mat.NewDense(size_l, size_c, Trans(length, size_l, size_c))
-		gradient.DivElem(&v, size)
-
-		size_l = gradient.RawMatrix().Rows
-		size_c = gradient.RawMatrix().Cols
-		tmplr := mat.NewDense(size_c, size_l, Trans(Learn.LearningRate, size_c, size_l))
-		Lr.Mul(tmplr, &gradient)
-		Learn.Theta = Modifi(Lr)
+		sub.SubVec(&z, MaptoVec(y))
+		mul.Mul(VecToMat(sub, 1, 1600), Learn.Datas)
+		divi.DivElem(&mul, length_mat)
+		fmt.Println(Mat2Vec(divi, 10))
+		fmt.Println(Learn.LearningRate)
+		tmpTheta.MulVec(Mat2Vec(divi, 10), Learn.LearningRate)
+		//Learn.Theta. soustraction de vecteur
 	}
 }
 
-func Cost(z *mat.Dense, length float64, y map[int]float64) (float64) {
+func Mat2Vec(matrice mat.Dense, x int) (*mat.VecDense) {
+
+	return (mat.NewVecDense(x, matrice.RawMatrix().Data))
+}
+
+func VecToMat(vec mat.VecDense, x, y int) (*mat.Dense) {
+
+	return (mat.NewDense(x, y, vec.RawVector().Data))
+}
+
+func Cost(z float64, length float64, y map[int]float64) (float64) {
 
 	var Sum float64
 
-	data := z.At(0, 1)
-
 	for i := 0; i < len(y) ; i++ {
 
-		Sum += y[i] * math.Log(data) + (1 - y[i]) * math.Log(1 - data)
+		Sum += y[i] * math.Log(z) + (1 - y[i]) * math.Log(1 - z)
 	}
 	Sum = -1 * (Sum / length)
 	return (Sum)
 }
 
-func g(z mat.Dense) (*mat.Dense) {
+func g(z mat.VecDense) (mat.VecDense) {
 
-	var e, i, a, d mat.Dense
-	var size_l, size_c int
+	var final *mat.VecDense
 
-	size_l = z.RawMatrix().Rows
-	size_c = z.RawMatrix().Cols
-
-	inv := mat.NewDense(size_c, size_l, Trans(-1, size_l, size_c))
-	add := mat.NewDense(size_c, size_l, Trans(1, size_l, size_c))
-
-	i.Mul(&z, inv)
-	e.Exp(&i)
-	a.Add(add, &e)
-	d.DivElem(add, &a)
-
-	data := d.At(1, 1)
-	final := mat.NewDense(1, size_l, Trans(data, size_l, 1))
-
-	return (final)
+	data := z.RawVector().Data
+	final = mat.NewVecDense(1600, gtab(data))
+	return (*final)
 }
 
-func Modifi(matrice mat.Dense) (*mat.Dense) {
+func gtab(data []float64) ([]float64) {
 
-	var size_l int
-	var data []float64
-
-	for i := 0; i < 7; i++ {
-
-		tmp := matrice.RawRowView(i)
-		for a := 0; a < len(tmp); a++ {
-			data = append(data, tmp[a])
-		}
+	for i := 0; i < len(data); i++ {
+		data[i] = 1 / (1 + math.Exp(-1 * data[i]))
 	}
-	size_l = matrice.RawMatrix().Rows
-	matf := mat.NewDense(size_l, 7, data)
-	return (matf)
+	return (data)
 }
 
-func Rotate(matrice *mat.Dense) (*mat.Dense) {
+func MaptoVec(y map[int]float64) (*mat.VecDense) {
 
-	var size_l, size_c int
-
-	data := matrice.RawRowView(0)
-	size_l = matrice.RawMatrix().Rows
-	size_c = matrice.RawMatrix().Cols
-	matf := mat.NewDense(size_l, size_c, data)
-	return (matf)
-}
-
-func MaptoMat(y map[int]float64) (*mat.Dense) {
-
-	var matrice *mat.Dense
+	var vector *mat.VecDense
 	var tmp []float64
 
 	for i := 0; i < len(y); i++ {
 		tmp = append(tmp, y[i])
 	}
 
-	matrice = mat.NewDense(1, len(tmp), tmp)
-	return (matrice)
+	vector = mat.NewVecDense(1600, tmp)
+	return (vector)
 }
 
 func Trans(z float64, sizec, sizel int) (res []float64) {
