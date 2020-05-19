@@ -7,7 +7,6 @@ import (
 	"Response"
 	"strings"
 	"dataOp"
-	"fmt"
 	"norm"
 	"math"
 	"gonum.org/v1/gonum/mat"
