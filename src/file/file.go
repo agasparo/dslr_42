@@ -10,10 +10,36 @@ import (
 	"types"
 	"maps"
 	"math"
+	"io/ioutil"
 )
 
 func SaveFile(data map[int][]float64, name string) {
 
+	var str string
+
+	for i := 0; i < len(data); i++ {
+
+		for a := 0; a < len(data[i]); a++ {
+			str += fmt.Sprintf("%f", data[i][a])
+			if a + 1 < len(data[i]) {
+				str += ","
+			}
+		}
+		str += "\n"
+	}
+
+	fd := []byte(str)
+    err := ioutil.WriteFile(name, fd, 0644)
+    check(err)
+}
+
+func check(e error) {
+    
+    if e != nil {
+        Response.Print(fmt.Sprintf("%s\n", e))
+    } else {
+    	Response.Sucess("File created")
+    }
 }
 
 func ReadFile(Dat *types.Datas, File string, t int) (int) {
