@@ -18,6 +18,21 @@ func Max(data map[int]float64) (float64) {
 	return (max)
 }
 
+func MaxIndex(data []float64) (int) {
+
+	max := data[0]
+	index := 0
+
+	for i := 0; i < len(data); i++ {
+		
+		if data[i] > max {
+			max = data[i]
+			index = i
+		}
+	}
+	return (index)
+}
+
 func Min(data map[int]float64) (float64) {
 
 	min := data[0]

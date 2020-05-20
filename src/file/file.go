@@ -49,16 +49,13 @@ func SaveHeader(data []string, name string) {
     check(err, name, 1)
 }
 
-func SaveLines(data []float64, name string) {
+func SaveLines(data []string, name string) {
 
 	var str string
 
 	for a := 0; a < len(data); a++ {
-		if a % 2 == 0 {
-			str += fmt.Sprintf("%d", int(data[a]))
-		} else {
-			str += fmt.Sprintf("%f", data[a])
-		}
+
+		str += fmt.Sprintf("%s", data[a])
 		if a + 1 < len(data) && a % 2 == 0 {
 				str += ","
 		}
@@ -66,6 +63,7 @@ func SaveLines(data []float64, name string) {
 			str += "\n"
 		}
 	}
+	str += "\n"
 	fd := []byte(str)
     err := ioutil.WriteFile(name, fd, 0644)
     check(err, name, 0)

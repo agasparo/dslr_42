@@ -10,6 +10,7 @@ import (
 	"norm"
 	"gonum.org/v1/gonum/mat"
 	"math"
+	"maths"
 	"fmt"
 )
 
@@ -45,23 +46,33 @@ func main() {
 func predict(TR types.DataTrain, P *types.PredictD) {
 
 	var header []string
-	var datasets []float64
+	var datasets []string
 
 	Sc := [4]string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"}
 	P.Weights = FormateWeigths(file.ReadDat("datasets/weights.csv"))
 	GetProb(P, Sc, TR)
+	P.Probas = TransProbas(P.Probas)
 	header = append(header, "Index", "Hogwarts House")
 	file.SaveHeader(header, FileName)
-	for i := 0; i < len(P.Probas[0]); i++ {
-		datasets = append(datasets, float64(i), 0.0)
+	for i := 0; i < len(P.Probas); i++ {
+		datasets = append(datasets, fmt.Sprintf("%d", i), Sc[maths.MaxIndex(P.Probas[i])])
 	}
-	fmt.Println(datasets)
 	file.SaveLines(datasets, FileName)
 }
 
-func GetProb(P *types.PredictD, Sc [4]string, TR types.DataTrain) {
+func TransProbas(probas map[int][]float64) (map[int][]float64) {
 
-	var res mat.VecDense
+	tab := make(map[int][]float64)
+
+	for i := 0; i < len(probas[0]); i++ {
+
+		tmp := []float64{ probas[0][i], probas[1][i], probas[2][i], probas[3][i] }
+		tab[i] = tmp
+	}
+	return (tab)
+}
+
+func GetProb(P *types.PredictD, Sc [4]string, TR types.DataTrain) {
 
 	P.Probas = make(map[int][]float64)
 	sVector = len(TR.Line[0])
@@ -69,11 +80,18 @@ func GetProb(P *types.PredictD, Sc [4]string, TR types.DataTrain) {
 	trainMat := mat.NewDense(sMatrix, sVector, Tranform(TR.Line))
 
 	for i := 0; i < len(Sc); i++ {
-		theta := mat.NewVecDense(weigthSize + 1, P.Weights[i])
-		res.MulVec(trainMat, theta)
-		z := g(res)
-		P.Probas[i] = z.RawVector().Data
+		P.Probas[i] = Calc(trainMat, P.Weights[i])
 	}
+}
+
+func Calc(trainMat *mat.Dense, weights []float64) ([]float64) {
+
+	var res, z mat.VecDense
+
+	theta := mat.NewVecDense(weigthSize + 1, weights)
+	res.MulVec(trainMat, theta)
+	z = g(res)
+	return (z.RawVector().Data)
 }
 
 func g(z mat.VecDense) (mat.VecDense) {
