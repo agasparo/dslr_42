@@ -51,5 +51,5 @@ type Learning struct {
 type PredictD struct {
 
 	Weights map[int][]float64
-	probas	map[int][]float64
+	Probas	map[int][]float64
 }

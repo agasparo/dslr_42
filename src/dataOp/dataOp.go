@@ -211,7 +211,6 @@ func FormatData(res *types.DataTrain, data types.Datas, t int) {
 
 	if t == 1 {
 		meds = file.ReadDat("datasets/med.csv")
-		fmt.Println(meds)
 	}
 
 	res.Line = make(map[int]map[int]float64)

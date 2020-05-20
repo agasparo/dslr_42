@@ -30,15 +30,55 @@ func SaveFile(data map[int][]float64, name string) {
 
 	fd := []byte(str)
     err := ioutil.WriteFile(name, fd, 0644)
-    check(err, name)
+    check(err, name, 1)
 }
 
-func check(e error, name string) {
+func SaveHeader(data []string, name string) {
+
+	var str string
+
+	for a := 0; a < len(data); a++ {
+		str += fmt.Sprintf("%s", data[a])
+		if a + 1 < len(data) {
+				str += ","
+		}
+	}
+	str += "\n"
+	fd := []byte(str)
+    err := ioutil.WriteFile(name, fd, 0644)
+    check(err, name, 1)
+}
+
+func SaveLines(data []float64, name string) {
+
+	var str string
+
+	for a := 0; a < len(data); a++ {
+		if a % 2 == 0 {
+			str += fmt.Sprintf("%d", int(data[a]))
+		} else {
+			str += fmt.Sprintf("%f", data[a])
+		}
+		if a + 1 < len(data) && a % 2 == 0 {
+				str += ","
+		}
+		if a % 2 != 0 && a != 0 && a + 1 < len(data) {
+			str += "\n"
+		}
+	}
+	fd := []byte(str)
+    err := ioutil.WriteFile(name, fd, 0644)
+    check(err, name, 0)
+}
+
+func check(e error, name string, v int) {
     
     if e != nil {
         Response.Print(fmt.Sprintf("%s\n", e))
     } else {
-    	Response.Sucess(fmt.Sprintf("File %s created", name))
+    	if v == 1 {
+    		Response.Sucess(fmt.Sprintf("File %s created", name))
+    	}
     }
 }
 

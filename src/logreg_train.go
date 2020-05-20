@@ -12,6 +12,9 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
+var sVector = 0
+var sMatrix = 0
+
 func main() {
 
 	args := os.Args[1:]
@@ -30,12 +33,14 @@ func main() {
 		return
 	}
 	Data = dataOp.SupprUs([]int{0, 1, 2, 3, 4, 5, 6, 9, 16}, Data)
-	dataOp.SaveMed(Data)
 	norm.NormalizeAllData(&Data)
+	dataOp.SaveMed(Data)
 	Train_Data := types.DataTrain{}
 	dataOp.FormatData(&Train_Data, Data, 0)
-	theta := mat.NewVecDense(11, Trans(0.0, 11, 1))
-	trainMat := mat.NewDense(len(Train_Data.Line), len(Train_Data.Line[0]), Tranform(Train_Data.Line))
+	sVector = len(Train_Data.Line[0])
+	sMatrix = len(Train_Data.Line)
+	theta := mat.NewVecDense(sVector, Trans(0.0, sVector, 1))
+	trainMat := mat.NewDense(sMatrix, sVector, Tranform(Train_Data.Line))
 	Learn := types.Learning{ 0.1, 100000, theta, 1.0, 0.000001, make(map[int][]float64), trainMat }
 	Train(Train_Data, &Learn, Data)
 }
@@ -50,7 +55,7 @@ func Train(Tr types.DataTrain, Learn *types.Learning, Data types.Datas) {
 
 		y = dataOp.RempY(Table[i], Data.School)
 		Learn.Weights[i] = gradientDescent(Tr, Learn, y)
-		Learn.Theta = mat.NewVecDense(11, Trans(0.0, 11, 1))
+		Learn.Theta = mat.NewVecDense(sVector, Trans(0.0, sVector, 1))
 		Learn.Cost = 1.0
 	}
 	file.SaveFile(Learn.Weights, "datasets/weights.csv")
@@ -63,7 +68,7 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 	var mul, divi mat.Dense
 
 	length = float64(len(y))
-	length_mat := mat.NewDense(1, 11, Trans(length, 1, 11))
+	length_mat := mat.NewDense(1, sVector, Trans(length, 1, sVector))
 
 	for i := 0; i < Learn.MaxIterations; i++ {
 
@@ -77,9 +82,9 @@ func gradientDescent(Tr types.DataTrain, Learn *types.Learning, y map[int]float6
 		}
 
 		sub.SubVec(&z, MaptoVec(y, 0))
-		mul.Mul(VecToMat(sub, 1, 1600), Learn.Datas)
+		mul.Mul(VecToMat(sub, 1, sMatrix), Learn.Datas)
 		divi.DivElem(&mul, length_mat)
-		grad := mat.NewVecDense(11, GetGrad(divi.RawMatrix().Data, Learn.LearningRate))
+		grad := mat.NewVecDense(sVector, GetGrad(divi.RawMatrix().Data, Learn.LearningRate))
 		Learn.Theta.SubVec(Learn.Theta, grad)
 	}
 	return (Learn.Theta.RawVector().Data)
@@ -103,8 +108,8 @@ func Cost(z mat.VecDense, length float64, y map[int]float64) (float64) {
 	var Sum float64
 	var res, res1, res2 mat.VecDense
 
-	z0 := mat.NewVecDense(1600, LogVector(z, 0))
-	z1 := mat.NewVecDense(1600, LogVector(z, 1))
+	z0 := mat.NewVecDense(sMatrix, LogVector(z, 0))
+	z1 := mat.NewVecDense(sMatrix, LogVector(z, 1))
 	y1 := MaptoVec(y, 0)
 	y2 := MaptoVec(y, 1)
 
@@ -145,7 +150,7 @@ func g(z mat.VecDense) (mat.VecDense) {
 	var final *mat.VecDense
 
 	data := z.RawVector().Data
-	final = mat.NewVecDense(1600, gtab(data))
+	final = mat.NewVecDense(sMatrix, gtab(data))
 	return (*final)
 }
 
@@ -170,7 +175,7 @@ func MaptoVec(y map[int]float64, add int) (*mat.VecDense) {
 		}
 	}
 
-	vector = mat.NewVecDense(1600, tmp)
+	vector = mat.NewVecDense(sMatrix, tmp)
 	return (vector)
 }
 
