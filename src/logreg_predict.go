@@ -21,12 +21,17 @@ var sMatrix = 0
 
 func main() {
 	args := os.Args[1:]
-	if len(args) != 1 {
-		Response.Print("usage : ./describe [file_name.csv]")
+	if len(args) != 2 {
+		Response.Print("usage : ./describe [file_name.csv] [file_weights]")
 		return
 	}
 	ext := strings.Split(args[0], ".")
 	if ext[len(ext) -1] != "csv" {
+		Response.Print("Your file must be a .csv")
+		return
+	}
+	ext1 := strings.Split(args[1], ".")
+	if ext1[len(ext1) -1] != "csv" {
 		Response.Print("Your file must be a .csv")
 		return
 	}
@@ -40,16 +45,16 @@ func main() {
 	Train_Data := types.DataTrain{}
 	dataOp.FormatData(&Train_Data, Data, 1)
 	Pred := types.PredictD{}
-	predict(Train_Data, &Pred)
+	predict(Train_Data, &Pred, args[1])
 }
 
-func predict(TR types.DataTrain, P *types.PredictD) {
+func predict(TR types.DataTrain, P *types.PredictD, file_name string) {
 
 	var header []string
 	var datasets []string
 
 	Sc := [4]string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"}
-	P.Weights = FormateWeigths(file.ReadDat("datasets/weights.csv"))
+	P.Weights = FormateWeigths(file.ReadDat(file_name))
 	GetProb(P, Sc, TR)
 	P.Probas = TransProbas(P.Probas)
 	header = append(header, "Index", "Hogwarts House")
