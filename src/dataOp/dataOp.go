@@ -205,7 +205,14 @@ func SaveMed(data types.Datas) {
 	file.SaveFile(r, "datasets/med.csv")
 }
 
-func FormatData(res *types.DataTrain, data types.Datas) {
+func FormatData(res *types.DataTrain, data types.Datas, t int) {
+
+	var meds []float64
+
+	if t == 1 {
+		meds = file.ReadDat("datasets/med.csv")
+		fmt.Println(meds)
+	}
 
 	res.Line = make(map[int]map[int]float64)
 
@@ -215,7 +222,11 @@ func FormatData(res *types.DataTrain, data types.Datas) {
 		Adds[0] = 1.0
 		for i := 0; i < len(data.Table); i++ {
 			if math.IsNaN(data.Table[i].Cat[z]) {
-				data.Table[i].Cat[z] = maths.Median(data.Table[i].Cat)
+				if t == 0 {
+					data.Table[i].Cat[z] = maths.Median(data.Table[i].Cat)
+				} else if t == 1 {
+					data.Table[i].Cat[z] = meds[i]
+				}
 			}
 			Adds[i + 1] = data.Table[i].Cat[z]
 		}

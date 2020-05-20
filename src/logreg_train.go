@@ -33,7 +33,7 @@ func main() {
 	dataOp.SaveMed(Data)
 	norm.NormalizeAllData(&Data)
 	Train_Data := types.DataTrain{}
-	dataOp.FormatData(&Train_Data, Data)
+	dataOp.FormatData(&Train_Data, Data, 0)
 	theta := mat.NewVecDense(11, Trans(0.0, 11, 1))
 	trainMat := mat.NewDense(len(Train_Data.Line), len(Train_Data.Line[0]), Tranform(Train_Data.Line))
 	Learn := types.Learning{ 0.1, 100000, theta, 1.0, 0.000001, make(map[int][]float64), trainMat }

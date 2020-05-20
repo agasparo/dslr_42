@@ -42,6 +42,33 @@ func check(e error, name string) {
     }
 }
 
+func ReadDat(name string) ([]float64) {
+
+	var data, nul []float64
+
+	csvfile, err := os.Open(name)
+	if err != nil {
+		Response.Print(fmt.Sprintf("%s\n", err))
+		return (nul)
+	}
+	r := csv.NewReader(csvfile)
+	for {
+		record, err := r.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			Response.Print(fmt.Sprintf("%s\n", err))
+			return (nul)
+		}
+		for i := 0; i < len(record); i++ {
+			conv, _ := strconv.ParseFloat(record[i], 64)
+			data = append(data, conv)
+		}
+	}
+	return (data)
+}
+
 func ReadFile(Dat *types.Datas, File string, t int) (int) {
 
 	csvfile, err := os.Open(File)

@@ -47,3 +47,9 @@ type Learning struct {
 	Weights			map[int][]float64
 	Datas 			*mat.Dense
 }
+
+type PredictD struct {
+
+	Weights map[int][]float64
+	probas	map[int][]float64
+}
