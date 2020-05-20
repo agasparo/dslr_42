@@ -30,6 +30,7 @@ func main() {
 		return
 	}
 	Data = dataOp.SupprUs([]int{0, 1, 2, 3, 4, 5, 6, 9, 16}, Data)
+	dataOp.SaveMed(Data)
 	norm.NormalizeAllData(&Data)
 	Train_Data := types.DataTrain{}
 	dataOp.FormatData(&Train_Data, Data)

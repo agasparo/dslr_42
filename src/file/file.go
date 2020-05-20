@@ -30,15 +30,15 @@ func SaveFile(data map[int][]float64, name string) {
 
 	fd := []byte(str)
     err := ioutil.WriteFile(name, fd, 0644)
-    check(err)
+    check(err, name)
 }
 
-func check(e error) {
+func check(e error, name string) {
     
     if e != nil {
         Response.Print(fmt.Sprintf("%s\n", e))
     } else {
-    	Response.Sucess("File created")
+    	Response.Sucess(fmt.Sprintf("File %s created", name))
     }
 }
 

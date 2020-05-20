@@ -10,6 +10,7 @@ import (
 	"log"
 	"encoding/csv"
 	"strings"
+	"file"
 )
 
 func GetMat(cat map[int]string, mat map[int]string) {
@@ -191,6 +192,19 @@ func InIDs(ids []int, search int) (bool) {
 	return (false)
 }
 
+func SaveMed(data types.Datas) {
+
+	var med []float64
+
+	for i := 0; i < len(data.Table); i++ {
+
+		med = append(med, maths.Median(data.Table[i].Cat))
+	}
+	r := make(map[int][]float64)
+	r[0] = med
+	file.SaveFile(r, "datasets/med.csv")
+}
+
 func FormatData(res *types.DataTrain, data types.Datas) {
 
 	res.Line = make(map[int]map[int]float64)
@@ -207,6 +221,17 @@ func FormatData(res *types.DataTrain, data types.Datas) {
 		}
 		res.Line[len(res.Line)] = Adds
 	}
+}
+
+func in(data []float64, s float64) (bool) {
+
+	for i := 0; i < len(data); i++ {
+
+		if data[i] == s {
+			return (true)
+		}
+	}
+	return (false)
 }
 
 func RempY(sc string, data map[int]string) (map[int]float64) {
