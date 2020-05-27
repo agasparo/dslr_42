@@ -5,10 +5,24 @@ Correction :
 
 Bonus :
 
- - graphique :
-  - nuage de point
-  - courbe
-  - affichage de l'erreur
-
  - couleurs
- - rapidite de calcul
+
+ - histogram :
+
+ 	- affichage dans le terminal
+ 	- reponse a la question
+ 	- verbose
+
+ - scatter_plot :
+
+ 	- affichage dans le terminal
+ 	- verbose
+
+ - pair_plot :
+
+ 	- affichage dans le terminal
+ 	- reponse a la question
+
+ - train :
+ 
+ 	- temps d'execution
