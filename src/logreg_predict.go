@@ -58,11 +58,10 @@ func predict(TR types.DataTrain, P *types.PredictD, file_name string) {
 	GetProb(P, Sc, TR)
 	P.Probas = TransProbas(P.Probas)
 	header = append(header, "Index", "Hogwarts House")
-	file.SaveHeader(header, FileName)
 	for i := 0; i < len(P.Probas); i++ {
 		datasets = append(datasets, fmt.Sprintf("%d", i), Sc[maths.MaxIndex(P.Probas[i])])
 	}
-	file.SaveLines(datasets, FileName)
+	file.SaveLines(datasets, FileName, header)
 }
 
 func TransProbas(probas map[int][]float64) (map[int][]float64) {

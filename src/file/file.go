@@ -33,7 +33,7 @@ func SaveFile(data map[int][]float64, name string) {
     check(err, name, 1)
 }
 
-func SaveHeader(data []string, name string) {
+func SaveHeader(data []string) (string) {
 
 	var str string
 
@@ -44,14 +44,16 @@ func SaveHeader(data []string, name string) {
 		}
 	}
 	str += "\n"
-	fd := []byte(str)
-    err := ioutil.WriteFile(name, fd, 0644)
-    check(err, name, 1)
+	return (str)
 }
 
-func SaveLines(data []string, name string) {
+func SaveLines(data []string, name string, datas []string) {
 
 	var str string
+
+	if len(datas) > 1 {
+		str = SaveHeader(datas)
+	}
 
 	for a := 0; a < len(data); a++ {
 
